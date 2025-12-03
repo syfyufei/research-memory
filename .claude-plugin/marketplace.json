@@ -1,6 +1,6 @@
 {
-  "name": "research-memory-dev",
-  "description": "Development marketplace for Research Memory skill",
+  "name": "research-memory-marketplace",
+  "description": "Research Memory skill marketplace for Claude Code",
   "owner": {
     "name": "Adrian",
     "email": "syfyufei@gmail.com"

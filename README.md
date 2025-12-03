@@ -117,43 +117,61 @@ Core components:
 
 Research Memory follows the same installation pattern as superpowers - you can install it directly as a plugin:
 
-**Option 1: Direct Repository Installation (Recommended)**
+**Option 1: Quick Install (One-command setup)**
+
+```bash
+curl -sSL https://raw.githubusercontent.com/syfyufei/research-memory/main/install.sh | bash
+```
+
+This script will:
+- Clone the repository
+- Add the marketplace
+- Install the plugin
+- Clean up temporary files
+
+**Option 2: Manual GitHub Installation**
 
 1. **Clone the repository**:
 
    ```bash
    git clone https://github.com/syfyufei/research-memory.git
+   cd research-memory
    ```
 
 2. **Add as a plugin marketplace**:
 
    **In terminal:**
    ```bash
-   claude plugin marketplace add /path/to/research-memory
+   claude plugin marketplace add .
    ```
 
    **Or in Claude Code session:**
    ```bash
-   /plugin marketplace add /path/to/research-memory
+   /plugin marketplace add .
    ```
 
 3. **Install Research Memory**:
 
    **In terminal:**
    ```bash
-   claude plugin install research-memory@research-memory-dev
+   claude plugin install research-memory@research-memory-marketplace
    ```
 
    **Or in Claude Code session:**
    ```bash
-   /plugin install research-memory@research-memory-dev
+   /plugin install research-memory@research-memory-marketplace
    ```
 
-**Option 2: Quick Install (One-command setup)**
+**Option 3: Local Development Installation**
+
+If you're developing or customizing the skill:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/syfyufei/research-memory/main/install.sh | bash
+cd /path/to/your/cloned/research-memory
+./install.sh
 ```
+
+The script will detect you're in the repository and install from the local directory.
 
 ### Manual Installation (Alternative)
 
