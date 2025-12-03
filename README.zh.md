@@ -105,80 +105,37 @@ research-memory/
 
 ## 安装
 
-### 系统要求
+在 Claude Code 中，首先注册市场：
 
-* **Claude Code**（桌面端 / VS Code / JetBrains 插件均可）
-* 无其他额外依赖
+```bash
+/plugin marketplace add syfyufei/research-memory
+```
 
-### 插件市场安装（推荐）
+然后从市场安装插件：
 
-使用 Adrian 的个人插件市场安装 Research Memory：
-
-**方案1：本地安装（推荐）**
-
-1. **克隆或下载市场**：
-
-   ```bash
-   git clone https://github.com/syfyufei/adrian-marketplace.git
-   ```
-
-2. **添加本地市场**：
-
-   ```bash
-   claude plugin marketplace add /path/to/adrian-marketplace
-   ```
-
-3. **安装 Research Memory**：
-
-   ```bash
-   claude plugin install research-memory@adrian-marketplace
-   ```
-
-**方案2：直接 GitHub 安装**
-
-1. **添加市场**：
-
-   ```bash
-   claude plugin marketplace add https://github.com/syfyufei/adrian-marketplace
-   ```
-
-2. **安装 Research Memory**：
-
-   ```bash
-   claude plugin install research-memory@adrian-marketplace
-   ```
-
-*注意：如果 GitHub 安装失败，请使用上面的本地安装方法。*
-
-### 手动安装（备选方案）
-
-如果你更喜欢手动安装或在市场安装时遇到问题：
+```bash
+/plugin install research-memory@research-memory-marketplace
+```
 
 ### 验证安装
 
-确认文件已正确复制到你的项目：
+安装后，在 Claude Code 中测试技能：
 
-```bash
-ls -la your-research-project/
+```
+"Research Memory，帮我恢复一下项目状态"
 ```
 
-你应该看到以下关键文件：
-- `handlers.py`
-- `config/config.json`
-- `.claude/CLAUDE.md`
-- `SKILL.md`
+Research Memory 会在首次使用时自动创建必要的 `memory/` 目录和文件。
 
 ### 快速开始
 
-安装后，在 Claude Code 中使用自然语言即可：
+在 Claude Code 中使用自然语言即可：
 
 ```
 "Research Memory，帮我恢复一下项目状态"
 "把这次工作会话记录到 Research Memory"
 "搜索我们关于空间滞后模型的决策"
 ```
-
-Research Memory 会在首次使用时自动创建必要的文件和目录。
 
 ### 卸载
 

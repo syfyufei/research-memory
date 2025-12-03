@@ -108,100 +108,37 @@ Core components:
 
 ## Installation
 
-### Requirements
-
-* **Claude Code** (desktop / VS Code / JetBrains plugins all work)
-* No additional dependencies required
-
-### Plugin Installation (Recommended)
-
-Research Memory follows the same installation pattern as superpowers - you can install it directly as a plugin:
-
-**Option 1: Quick Install (One-command setup)**
+In Claude Code, register the marketplace first:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/syfyufei/research-memory/main/install.sh | bash
+/plugin marketplace add syfyufei/research-memory
 ```
 
-This script will:
-- Clone the repository
-- Add the marketplace
-- Install the plugin
-- Clean up temporary files
-
-**Option 2: Manual GitHub Installation**
-
-1. **Clone the repository**:
-
-   ```bash
-   git clone https://github.com/syfyufei/research-memory.git
-   cd research-memory
-   ```
-
-2. **Add as a plugin marketplace**:
-
-   **In terminal:**
-   ```bash
-   claude plugin marketplace add .
-   ```
-
-   **Or in Claude Code session:**
-   ```bash
-   /plugin marketplace add .
-   ```
-
-3. **Install Research Memory**:
-
-   **In terminal:**
-   ```bash
-   claude plugin install research-memory@research-memory-marketplace
-   ```
-
-   **Or in Claude Code session:**
-   ```bash
-   /plugin install research-memory@research-memory-marketplace
-   ```
-
-**Option 3: Local Development Installation**
-
-If you're developing or customizing the skill:
+Then install the plugin from this marketplace:
 
 ```bash
-cd /path/to/your/cloned/research-memory
-./install.sh
+/plugin install research-memory@research-memory-marketplace
 ```
-
-The script will detect you're in the repository and install from the local directory.
-
-### Manual Installation (Alternative)
-
-If you prefer manual installation or encounter issues with the marketplace:
 
 ### Verify Installation
 
-To confirm the files are correctly copied to your project:
+After installation, test the skill in Claude Code:
 
-```bash
-ls -la your-research-project/
+```
+"Research Memory, help me get back up to speed with my project"
 ```
 
-You should see the key files:
-- `handlers.py`
-- `config/config.json`
-- `.claude/CLAUDE.md`
-- `SKILL.md`
+Research Memory will automatically create the necessary `memory/` directory and files on first use.
 
 ### Quick Start
 
-After installation, simply use natural language in Claude Code:
+Simply use natural language in Claude Code:
 
 ```
 "Research Memory, help me get back up to speed with my project"
 "Log this work session to Research Memory"
 "Search for our decisions about spatial lag models"
 ```
-
-Research Memory will automatically create the necessary files and directories on first use.
 
 ### Uninstallation
 

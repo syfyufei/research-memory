@@ -104,62 +104,37 @@ research-memory/
 
 ## インストール
 
-### システム要件
+Claude Codeで、まずマーケットプレイスを登録します：
 
-* **Claude Code**（デスクトップ版 / VS Code / JetBrainsプラグインすべて動作）
-* その他の追加依存関係はありません
+```bash
+/plugin marketplace add syfyufei/research-memory
+```
 
-### プラグインマーケットプレイスインストール（推奨）
+次に、このマーケットプレイスからプラグインをインストールします：
 
-Adrianの個人プラグインマーケットプレイスを使用してResearch Memoryをインストール：
-
-1. **マーケットプレイスを追加**：
-
-   ```bash
-   claude plugin marketplace add https://github.com/syfyufei/adrian-marketplace
-   ```
-
-2. **Research Memoryをインストール**：
-
-   ```bash
-   claude plugin install research-memory@adrian-marketplace
-   ```
-
-3. **インストールを確認**：
-
-   ```bash
-   # プラグインは任意のClaude Codeセッションで使用可能です
-   ```
-
-### 手動インストール（代替案）
-
-手動インストールを希望する場合やマーケットプレイスで問題が発生した場合：
+```bash
+/plugin install research-memory@research-memory-marketplace
+```
 
 ### インストールの確認
 
-ファイルがプロジェクトに正しくコピーされたか確認：
+インストール後、Claude Codeでスキルをテストしてみてください：
 
-```bash
-ls -la your-research-project/
+```
+"ねえ Research Memory、プロジェクトの状況を把握して"
 ```
 
-以下のキーファイルが表示されるはずです：
-- `handlers.py`
-- `config/config.json`
-- `.claude/CLAUDE.md`
-- `SKILL.md`
+Research Memoryは初回使用時に必要な`memory/`ディレクトリとファイルを自動的に作成します。
 
 ### クイックスタート
 
-インストール後、Claude Codeで自然言語を使用するだけです：
+Claude Codeで自然言語を使用するだけです：
 
 ```
 "ねえ Research Memory、プロジェクトの状況を把握して"
 "この作業セッションをResearch Memoryに記録して"
 "空間ラグモデルに関する決定を検索して"
 ```
-
-Research Memoryは初回使用時に必要なファイルとディレクトリを自動的に作成します。
 
 ### アンインストール
 
