@@ -122,10 +122,10 @@ Then install the plugin from this marketplace:
 
 ### Verify Installation
 
-After installation, test the skill in Claude Code:
+Check that the skill is available:
 
-```
-"Research Memory, help me get back up to speed with my project"
+```bash
+/help
 ```
 
 Research Memory will automatically create the necessary `memory/` directory and files on first use.

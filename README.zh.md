@@ -119,10 +119,10 @@ research-memory/
 
 ### 验证安装
 
-安装后，在 Claude Code 中测试技能：
+检查技能是否可用：
 
-```
-"Research Memory，帮我恢复一下项目状态"
+```bash
+/help
 ```
 
 Research Memory 会在首次使用时自动创建必要的 `memory/` 目录和文件。
