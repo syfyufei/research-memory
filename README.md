@@ -142,6 +142,28 @@ Research Memory is not yet published to Claude Code's plugin marketplace, so man
 
 You can install Research Memory using Adrian's personal plugin marketplace:
 
+**Option 1: Local Installation (Recommended)**
+
+1. **Clone or download the marketplace**:
+
+   ```bash
+   git clone https://github.com/syfyufei/adrian-marketplace.git
+   ```
+
+2. **Add the local marketplace**:
+
+   ```bash
+   claude plugin marketplace add /path/to/adrian-marketplace
+   ```
+
+3. **Install Research Memory**:
+
+   ```bash
+   claude plugin install research-memory@adrian-marketplace
+   ```
+
+**Option 2: Direct GitHub Installation**
+
 1. **Add the marketplace**:
 
    ```bash
@@ -154,11 +176,13 @@ You can install Research Memory using Adrian's personal plugin marketplace:
    claude plugin install research-memory@adrian-marketplace
    ```
 
-3. **Verify installation**:
+*Note: If GitHub installation fails, use the local installation method above.*
 
-   ```bash
-   # The plugin is now ready to use in any Claude Code session
-   ```
+**Quick Install (One-command setup)**:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/syfyufei/research-memory/main/install.sh | bash
+```
 
 ### Manual Installation (Alternative)
 

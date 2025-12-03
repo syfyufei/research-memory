@@ -139,6 +139,28 @@ Research Memory 尚未发布到 Claude Code 插件市场，因此目前需要手
 
 使用 Adrian 的个人插件市场安装 Research Memory：
 
+**方案1：本地安装（推荐）**
+
+1. **克隆或下载市场**：
+
+   ```bash
+   git clone https://github.com/syfyufei/adrian-marketplace.git
+   ```
+
+2. **添加本地市场**：
+
+   ```bash
+   claude plugin marketplace add /path/to/adrian-marketplace
+   ```
+
+3. **安装 Research Memory**：
+
+   ```bash
+   claude plugin install research-memory@adrian-marketplace
+   ```
+
+**方案2：直接 GitHub 安装**
+
 1. **添加市场**：
 
    ```bash
@@ -151,11 +173,7 @@ Research Memory 尚未发布到 Claude Code 插件市场，因此目前需要手
    claude plugin install research-memory@adrian-marketplace
    ```
 
-3. **验证安装**：
-
-   ```bash
-   # 插件现在可以在任何 Claude Code 会话中使用
-   ```
+*注意：如果 GitHub 安装失败，请使用上面的本地安装方法。*
 
 ### 手动安装（备选方案）
 
