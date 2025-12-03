@@ -102,47 +102,69 @@ research-memory/
 
 ---
 
-## インストールと統合
+## インストール
 
-### 依存関係
+### システム要件
 
-* **Python** ≥ 3.8
 * **Claude Code**（デスクトップ版 / VS Code / JetBrainsプラグインすべて動作）
-* サードパーティPythonライブラリ依存なし（標準ライブラリのみ）
+* その他の追加依存関係はありません
 
-### 既存研究プロジェクトへの統合（推奨）
+### プラグインマネージャー経由のインストール（推奨）
 
-研究プロジェクトのルートディレクトリを`my-research-project/`と仮定：
+最も簡単なインストール方法はClaude Codeプラグインマネージャーを利用することです：
 
-1. **ファイルコピー**
+```bash
+claude plugin install research-memory
+```
 
-   このリポジトリから以下をプロジェクトにコピー：
+これによりResearch Memoryプラグインが自動的にダウンロード・インストールされます。
 
-   ```text
-   research-memory/handlers.py        → my-research-project/handlers.py（名前変更またはサブディレクトリ配置推奨）
-   research-memory/SKILL.md          → my-research-project/SKILL.md（または .claude/skills/research-memory/SKILL.md）
-   research-memory/config/config.json → my-research-project/config/config.json
-   research-memory/.claude/CLAUDE.md  → プロジェクトの.claude/CLAUDE.mdにマージ
-   ```
+### 手動インストール
 
-   または、このリポジトリをサブディレクトリとしてプロジェクトに直接マウント：
+ソースコードからインストールする場合：
 
-   ```bash
-   git submodule add https://github.com/syfyufei/research-memory.git .claude/skills/research-memory
-   ```
-
-2. **Claude CodeがSKILLを発見できることを確認**
-
-   * スキルを`.claude/skills/research-memory/`に配置した場合、Claude Codeが自動的に発見；
-   * そうでない場合は、`SKILL.md`と`handlers.py`がClaude Code対応パスにあることを確認。
-
-3. **（オプション）`memory/`ディレクトリを事前作成**
-
-   作成しなくても問題ありません。初回スキル呼び出し時に自動生成されます：
+1. **リポジトリをクローン**：
 
    ```bash
-   mkdir -p memory
+   git clone https://github.com/syfyufei/research-memory.git
+   cd research-memory
    ```
+
+2. **ローカルパスからインストール**：
+
+   ```bash
+   claude plugin install /path/to/research-memory
+   ```
+
+### インストールの確認
+
+プラグインが正しくインストールされているか確認：
+
+```bash
+claude plugin list
+```
+
+インストール済みプラグインリストに `research-memory` が表示されるはずです。
+
+### クイックスタート
+
+インストール後、Claude Codeで自然言語を使用するだけです：
+
+```
+"ねえ Research Memory、プロジェクトの状況を把握して"
+"この作業セッションをResearch Memoryに記録して"
+"空間ラグモデルに関する決定を検索して"
+```
+
+Research Memoryは初回使用時に必要なファイルとディレクトリを自動的に作成します。
+
+### アンインストール
+
+Research Memoryを削除する必要がある場合：
+
+```bash
+claude plugin remove research-memory
+```
 
 ---
 

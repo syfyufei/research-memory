@@ -106,47 +106,69 @@ Core components:
 
 ---
 
-## Installation & Integration
+## Installation
 
-### Dependencies
+### Requirements
 
-* **Python** ≥ 3.8
 * **Claude Code** (desktop / VS Code / JetBrains plugins all work)
-* No third-party Python library dependencies (standard library only)
+* No additional dependencies required
 
-### Integration into Existing Research Projects (Recommended)
+### Installation via Plugin Manager (Recommended)
 
-Assume your research project root directory is `my-research-project/`:
+The easiest way to install Research Memory is through the Claude Code plugin manager:
 
-1. **Copy Files**
+```bash
+claude plugin install research-memory
+```
 
-   Copy the following from this repository to your project:
+This will automatically download and install the Research Memory plugin.
 
-   ```text
-   research-memory/handlers.py        → my-research-project/handlers.py (recommend renaming or placing in subdirectory)
-   research-memory/SKILL.md          → my-research-project/SKILL.md (or .claude/skills/research-memory/SKILL.md)
-   research-memory/config/config.json → my-research-project/config/config.json
-   research-memory/.claude/CLAUDE.md  → Merge into your project's .claude/CLAUDE.md
-   ```
+### Manual Installation
 
-   Or directly mount this repository as a subdirectory in your project:
+If you prefer to install from source:
 
-   ```bash
-   git submodule add https://github.com/syfyufei/research-memory.git .claude/skills/research-memory
-   ```
-
-2. **Ensure Claude Code Can Discover SKILL**
-
-   * If you put the skill in `.claude/skills/research-memory/`, Claude Code will discover it automatically;
-   * Otherwise ensure `SKILL.md` and `handlers.py` are in Claude Code supported paths.
-
-3. **(Optional) Pre-create `memory/` Directory**
-
-   Not necessary if you don't create it, it will be auto-generated on first skill call:
+1. **Clone the repository**:
 
    ```bash
-   mkdir -p memory
+   git clone https://github.com/syfyufei/research-memory.git
+   cd research-memory
    ```
+
+2. **Install from local path**:
+
+   ```bash
+   claude plugin install /path/to/research-memory
+   ```
+
+### Verify Installation
+
+To confirm the plugin is installed correctly:
+
+```bash
+claude plugin list
+```
+
+You should see `research-memory` in the list of installed plugins.
+
+### Quick Start
+
+After installation, simply use natural language in Claude Code:
+
+```
+"Research Memory, help me get back up to speed with my project"
+"Log this work session to Research Memory"
+"Search for our decisions about spatial lag models"
+```
+
+Research Memory will automatically create the necessary files and directories on first use.
+
+### Uninstallation
+
+If you need to remove Research Memory:
+
+```bash
+claude plugin remove research-memory
+```
 
 ---
 

@@ -103,47 +103,69 @@ research-memory/
 
 ---
 
-## 安装与集成
+## 安装
 
-### 依赖要求
+### 系统要求
 
-* **Python** ≥ 3.8
 * **Claude Code**（桌面端 / VS Code / JetBrains 插件均可）
-* 无第三方 Python 库依赖（只用标准库）
+* 无其他额外依赖
 
-### 集成到现有科研项目（推荐）
+### 通过插件管理器安装（推荐）
 
-假设你的研究项目根目录为 `my-research-project/`：
+最简单的安装方式是通过 Claude Code 插件管理器：
 
-1. **复制文件**
+```bash
+claude plugin install research-memory
+```
 
-   将本仓库中的以下内容复制到你的项目中：
+这将自动下载并安装 Research Memory 插件。
 
-   ```text
-   research-memory/handlers.py        → my-research-project/handlers.py（建议改名或放入子目录）
-   research-memory/SKILL.md          → my-research-project/SKILL.md（或 .claude/skills/research-memory/SKILL.md）
-   research-memory/config/config.json → my-research-project/config/config.json
-   research-memory/.claude/CLAUDE.md  → 合并进你项目的 .claude/CLAUDE.md
-   ```
+### 手动安装
 
-   或者直接把本仓库作为子目录挂在项目下：
+如果你更喜欢从源代码安装：
 
-   ```bash
-   git submodule add https://github.com/syfyufei/research-memory.git .claude/skills/research-memory
-   ```
-
-2. **确保 Claude Code 能发现 SKILL**
-
-   * 如果你把 skill 放在 `.claude/skills/research-memory/`，Claude Code 会自动发现；
-   * 否则确保 `SKILL.md` 和 `handlers.py` 在 Claude Code 支持的路径中。
-
-3. **（可选）预创建 `memory/` 目录**
-
-   不创建也没关系，第一次调用 skill 时会自动生成：
+1. **克隆仓库**：
 
    ```bash
-   mkdir -p memory
+   git clone https://github.com/syfyufei/research-memory.git
+   cd research-memory
    ```
+
+2. **从本地路径安装**：
+
+   ```bash
+   claude plugin install /path/to/research-memory
+   ```
+
+### 验证安装
+
+确认插件是否正确安装：
+
+```bash
+claude plugin list
+```
+
+你应该能在已安装插件列表中看到 `research-memory`。
+
+### 快速开始
+
+安装后，在 Claude Code 中使用自然语言即可：
+
+```
+"Research Memory，帮我恢复一下项目状态"
+"把这次工作会话记录到 Research Memory"
+"搜索我们关于空间滞后模型的决策"
+```
+
+Research Memory 会在首次使用时自动创建必要的文件和目录。
+
+### 卸载
+
+如果需要卸载 Research Memory：
+
+```bash
+claude plugin remove research-memory
+```
 
 ---
 
