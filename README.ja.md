@@ -1,10 +1,6 @@
-## 🌐 Language / 言語 / 语言
-
 [**English**](README.md) | [日本語](README.ja.md) | [简体中文](README.zh.md)
 
-# `research-memory`
-
-研究者の皆さんなら、こんな経験があるはず：
+Academic research really works like:
 
 1. **研究のサイクルは、思っていたよりずっと長くなります。**
 2. **同時に進めるリポジトリは、思っていたよりずっと多くなります。**

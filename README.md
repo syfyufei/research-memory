@@ -1,10 +1,6 @@
-## 🌐 Language / 言語 / 语言
-
 [**English**](README.md) | [日本語](README.ja.md) | [简体中文](README.zh.md)
 
-# `research-memory`
-
-We all know how academic research really works:
+Academic research really works like:
 
 1. **Your research cycles will inevitably stretch far beyond your initial timeline.**
 2. **You'll inevitably have more repositories open simultaneously than you intended.**
