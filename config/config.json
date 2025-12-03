@@ -1,0 +1,36 @@
+{
+  "bootstrap": {
+    "recent_entries_count": 5,
+    "include_todos": true,
+    "suggest_work_plan": true
+  },
+  "logging": {
+    "auto_timestamp": true,
+    "phase_sections": [
+      "DGP",
+      "data_preprocess",
+      "data_analyse",
+      "modeling",
+      "robustness",
+      "writing",
+      "infra",
+      "notes"
+    ],
+    "experiment_schema": [
+      "hypothesis",
+      "dataset",
+      "model",
+      "metrics",
+      "notes"
+    ]
+  },
+  "search": {
+    "max_results": 10,
+    "include_context": true,
+    "context_lines": 3
+  },
+  "memory_directory": "memory",
+  "timestamp_format": "ISO8601",
+  "csv_delimiter": ",",
+  "encoding": "utf-8"
+}
