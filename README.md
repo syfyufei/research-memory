@@ -1,6 +1,14 @@
+# `research-memory`
+
+## 🌐 Language / 言語 / 语言
+
 [**English**](README.md) | [日本語](README.ja.md) | [简体中文](README.zh.md)
 
-Academic research really works like:
+<p align="center">
+  <img src="https://maas-log-prod.cn-wlcb.ufileos.com/anthropic/c40838a3-d7bd-48b7-aa5c-ffc7e375eafa/7620065448c91a124ebc9e0cfc0117dc.png?UCloudPublicKey=TOKEN_e15ba47a-d098-4fbd-9afc-a0dcf0e4e621&Expires=1764754013&Signature=RUQRG%2FfdVJadF9efUZBQbRqUHU0%3D" alt="Research Memory Banner" width="100%"/>
+</p>
+
+We all know how academic research really works:
 
 1. **Your research cycles will inevitably stretch far beyond your initial timeline.**
 2. **You'll inevitably have more repositories open simultaneously than you intended.**
