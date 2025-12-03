@@ -1,78 +1,193 @@
 ## 🌐 Language / 言語 / 语言
 
-[**English**](README.md) | [日本語](README.ja.md) | [简体中文](README.zh.md) 
+[**English**](README.md) | [日本語](README.ja.md) | [简体中文](README.zh.md)
+
+# `research-memory`
+
+We all know how academic research really works:
+
+1. **Your research cycles will inevitably stretch far beyond your initial timeline.**
+2. **You'll inevitably have more repositories open simultaneously than you intended.**
+3. **When you return to a project, you'll inevitably have forgotten where you left off.**
+
+If you're a developer who works with AI assistants, this scenario probably feels all too familiar:
+
+> You open a repository that's been sitting untouched for three months,
+> Scroll through `git log` from top to bottom,
+> All your notebooks, scripts, and paper drafts are still there,
+> But only one question echoes in your mind:
+> **"Where exactly did I leave things last time?"**
+
+Here's what makes it even more frustrating:
+**You've forgotten, and so has your LLM assistant.**
+Starting a fresh conversation, the LLM only has access to "the current few screens of context",
+yet has absolutely no understanding of all the struggles, detours, and breakthroughs you've navigated through over the past few months.
+
+`research-memory` is designed to create a **truly "long-term" project-level memory layer** during your development process:
+
+- It doesn't try to be a general-purpose RAG system or help you memorize literature;
+- It faithfully records what you and your AI assistant accomplish in this project:
+  **what you did, how you did it, why you chose that approach, and what comes next**.
+
+In other words:
+
+> Empower "future you + your current AI assistant"
+> to seamlessly continue where "past you" left off,
+> rather than starting from scratch with a blank conversation every single time.
+
+
+## Quick Overview (TL;DR)
+
+`research-memory` is a Claude Code Skill / Python tool specifically designed for academic research projects, providing three essential capabilities:
+
+1. **Session Bootstrap: `research_memory_bootstrap`**
+   - Pulls from your `memory/` directory:
+     - Project overview (research questions, hypotheses, data sources...)
+     - Recent N devlog entries
+     - Current TODO list
+   - Automatically generates "recent progress + suggested work plan"
+
+2. **Session Logging: `research_memory_log_session`**
+   - Structured recording of research work into:
+     - `devlog.md`: Organized by research phases (DGP / data_preprocess / data_analyse / modeling / robustness / writing / infra / notes)
+     - `experiments.csv`: One line per experiment (hypothesis/dataset/model/metrics/notes...)
+     - `decisions.md`: Key decisions and their rationale/alternatives
+     - `todos.md`: Add new items while marking completed ones as `[x]`
+
+3. **History Query: `research_memory_query_history`**
+   - Search using keywords + simple filters (date / phase / type) across:
+     - `devlog.md`
+     - `decisions.md`
+     - `experiments.csv`
+   - Returns summaries + key snippets.
+
+**Everything runs on local text files (Markdown + CSV), plays nicely with Git, is manually editable, and has zero external service dependencies.**
 
 ---
 
-A Claude Code skill designed for academic research projects to manage and record project-level long-term memory, helping researchers maintain context continuity between different sessions.
+## Architecture Overview
 
-## Project Overview
+Overall structure:
 
-This skill addresses a core problem in academic research: how to effectively record and manage knowledge, decisions, and experimental trajectories throughout the research process, enabling quick context restoration after project interruptions and avoiding repetitive work.
-
-## 🚀 Quick Start
-
-### 1. Requirements
-
-- **Python**: 3.8 or higher
-- **Claude Code**: Latest version
-- No additional dependencies required (uses Python standard library)
-
-### 2. Installation in Existing Projects
-
-Integrate the research-memory skill into your academic research project:
-
-```bash
-# 1. Clone or download this repository
-git clone https://github.com/syfyufei/research-memory.git
-cd research-memory
-
-# 2. Copy core files to your project
-cp SKILL.md /path/to/your/project/
-cp handlers.py /path/to/your/project/
-cp -r config/ /path/to/your/project/
-cp -r .claude/ /path/to/your/project/
-
-# 3. Create memory directory (optional, will be created automatically on first use)
-mkdir -p /path/to/your/project/memory
+```text
+research-memory/
+├── handlers.py        # Skill's Python implementation & CLI entry point
+├── SKILL.md           # Claude Code Skill description (tool definitions)
+├── config/
+│   └── config.json    # Skill behavior configuration
+├── .claude/
+│   ├── CLAUDE.md      # Project-level instructions, telling Claude when to use this skill
+│   └── settings.local.json  # Claude Code local settings example
+└── memory/            # Actual "project memory layer" (auto-creatable)
+    ├── project-overview.md  # Long-term project information
+    ├── devlog.md            # Development/analysis log (by session + phase)
+    ├── decisions.md         # Key decision records
+    ├── experiments.csv      # Experiment table (structured)
+    └── todos.md             # TODO / open questions
 ```
 
-### 3. Verify Installation
+Core components:
 
-Test in your project directory:
+* **Skill Layer**
 
-```bash
-# Test basic functionality
-python3 handlers.py bootstrap
+  * `SKILL.md` defines three tools:
 
-# Test search functionality
-python3 handlers.py query --question "test"
-```
+    * `research_memory_bootstrap`
+    * `research_memory_log_session`
+    * `research_memory_query_history`
+  * Called by Claude Code to corresponding functions in `handlers.py`.
 
-### 4. Start Using
+* **Backend Layer**
 
-In Claude Code, you can trigger research-memory functionality through natural language:
+  * `MemoryBackend` encapsulates all file I/O, configuration loading, and TODO processing logic:
 
-```
-User: "Good morning! Help me restore the project status using research-memory."
-Claude: [Automatically analyzes project and restores context]
-```
+    * Currently local Markdown + CSV;
+    * Can be replaced with SQLite / vector database / MCP server in the future without changing the outer interface.
 
-## 🔧 Configuration Options
+---
 
-Customize skill behavior through `config/config.json`:
+## Installation & Integration
 
-```json
+### Dependencies
+
+* **Python** ≥ 3.8
+* **Claude Code** (desktop / VS Code / JetBrains plugins all work)
+* No third-party Python library dependencies (standard library only)
+
+### Integration into Existing Research Projects (Recommended)
+
+Assume your research project root directory is `my-research-project/`:
+
+1. **Copy Files**
+
+   Copy the following from this repository to your project:
+
+   ```text
+   research-memory/handlers.py        → my-research-project/handlers.py (recommend renaming or placing in subdirectory)
+   research-memory/SKILL.md          → my-research-project/SKILL.md (or .claude/skills/research-memory/SKILL.md)
+   research-memory/config/config.json → my-research-project/config/config.json
+   research-memory/.claude/CLAUDE.md  → Merge into your project's .claude/CLAUDE.md
+   ```
+
+   Or directly mount this repository as a subdirectory in your project:
+
+   ```bash
+   git submodule add https://github.com/syfyufei/research-memory.git .claude/skills/research-memory
+   ```
+
+2. **Ensure Claude Code Can Discover SKILL**
+
+   * If you put the skill in `.claude/skills/research-memory/`, Claude Code will discover it automatically;
+   * Otherwise ensure `SKILL.md` and `handlers.py` are in Claude Code supported paths.
+
+3. **(Optional) Pre-create `memory/` Directory**
+
+   Not necessary if you don't create it, it will be auto-generated on first skill call:
+
+   ```bash
+   mkdir -p memory
+   ```
+
+---
+
+## Configuration: `config/config.json`
+
+All behavior is controlled by one JSON configuration file, default configuration looks like this (excerpt):
+
+```jsonc
 {
   "memory_directory": "memory",
   "encoding": "utf-8",
   "csv_delimiter": ",",
   "timestamp_format": "ISO8601",
+
   "bootstrap": {
     "recent_entries_count": 5,
     "include_todos": true,
     "suggest_work_plan": true
   },
+
+  "logging": {
+    "auto_timestamp": true,
+    "phase_sections": [
+      "DGP",
+      "data_preprocess",
+      "data_analyse",
+      "modeling",
+      "robustness",
+      "writing",
+      "infra",
+      "notes"
+    ],
+    "experiment_schema": [
+      "hypothesis",
+      "dataset",
+      "model",
+      "metrics",
+      "notes"
+    ]
+  },
+
   "search": {
     "max_results": 10,
     "include_context": true,
@@ -81,268 +196,295 @@ Customize skill behavior through `config/config.json`:
 }
 ```
 
-### Configuration Description
+Key field descriptions:
 
-- `memory_directory`: Memory file storage directory (default: "memory")
-- `encoding`: File encoding format (default: "utf-8")
-- `timestamp_format`: Timestamp format ("ISO8601", "YYYY-MM-DD_HH-MM-SS", "timestamp")
-- `bootstrap.recent_entries_count`: Number of recent entries to show during recovery
-- `search.max_results`: Maximum number of search results to return
+* `memory_directory`: Memory file directory (relative to project root);
 
-## 🎯 Core Features
+* `encoding`: File encoding (default `utf-8`, can also be changed to `gbk`, etc.);
 
-### 1. Research Context Recovery (`research_memory_bootstrap`)
-Quickly restore project status, including:
-- Recent research progress summary
-- Current TODO items
-- Work suggestions based on historical records
+* `timestamp_format`:
 
-**Usage Examples**:
+  * `"ISO8601"` → e.g., `2025-12-03T19:30:00+09:00`
+  * `"YYYY-MM-DD_HH-MM-SS"` → suitable for filenames / human reading
+  * `"timestamp"` → Unix timestamp (seconds);
+
+* `bootstrap.recent_entries_count`: How many recent devlog entries to show on startup;
+
+* `logging.phase_sections`: Supported research phase tags;
+
+* `logging.experiment_schema`: Required fields in `experiments.csv`;
+
+* `search.*`: Number of results returned on query and whether to include context.
+
+You can modify `config.json` as needed, all configuration items are effective in `MemoryBackend`.
+
+---
+
+## Using with Claude Code
+
+### Typical Usage Patterns
+
+**1. Starting your day: Getting back up to speed**
+
+> "Hey, help me get back up to speed with my research using research-memory, and suggest a plan for today."
+
+Here's what happens:
+
+* Calls `research_memory_bootstrap`:
+
+  * Reads `project-overview.md` (if it exists);
+  * Extracts recent N devlog entries (with timestamps + phase info);
+  * Summarizes current incomplete TODOs;
+  * Generates a "today's work suggestion plan".
+
+---
+
+**2. Completing a work session: Logging your progress**
+
+> "Help me organize this work session into a research log, broken down by DGP / data_analyse / modeling phases, and save it to research-memory."
+
+Claude will:
+
+1. Based on current conversation content and what you just did, construct a payload, for example:
+
+   ```jsonc
+   {
+     "session_goal": "Run spatial DiD on MCIB_v1.3 to verify H2",
+     "changes_summary": [
+       "Updated 01_clean_mcib.R, added treat_window_180 variable",
+       "Filtered municipalities with sample count < 100"
+     ],
+     "phases": {
+       "DGP": "Assume treatment effects gradually appear within 0-180 days, use distance threshold 50km to construct weight matrix.",
+       "data_analyse": "Plot baseline period cognitive mean comparison for treatment/control groups, no obvious pre-trend crossover observed.",
+       "modeling": "Estimate two specifications: TWFE + cluster by municipality; extended specification with provincial time trends.",
+       "robustness": "Simple placebo: shift treatment time by 1 year overall, results not significant."
+     },
+     "experiments": [
+       {
+         "hypothesis": "H2",
+         "dataset": "MCIB_v1.3",
+         "model": "Spatial DiD with 50km binary contiguity W",
+         "metrics": {
+           "ATT": 0.153,
+           "p_value": 0.021
+         },
+         "notes": "Results sensitive to window setting, need further robustness checks."
+       }
+     ],
+     "decisions": [
+       {
+         "title": "Tentatively adopt Model B as main specification",
+         "rationale": "Pre-trend smoother after adding provincial time trends, coefficients more stable.",
+         "alternatives": [
+           "Continue using simple TWFE as main specification",
+           "Try event-study form"
+         ]
+       }
+     ],
+     "todos": [
+       "Add k-nearest neighbors based spatial weight matrix comparison",
+       "Systematically organize placebo/alternative spec results into paper.qmd"
+     ],
+     "completed_todos": [
+       "Add spatial weight matrix construction explanation in Methods section"
+     ]
+   }
+   ```
+
+2. Call `research_memory_log_session(payload)`, automatically:
+
+   * Append a timestamped session record to `devlog.md`;
+   * Insert a complete experiment information row to `experiments.csv`;
+   * Write decision block to `decisions.md`;
+   * Add new TODOs to `todos.md`, and mark items in `completed_todos` as completed.
+
+After that, you just need to naturally describe "what you just did", and the Skill will help you turn it into structured memory that can be long-term retrieved.
+
+---
+
+**3. Looking back: Reviewing past decisions and experiments**
+
+> "Why did we abandon spatial lag models before?"
+> "Show me all experiments we ran for H2."
+> "Look up changes related to hksarg_parser.R."
+
+Claude will call:
+
+```python
+query_history(query, filters=None)
 ```
-"Help me use research-memory to restore where I left off"
-"What's today's research plan?"
-"What's the current project status and next steps?"
-```
 
-### 2. Research Session Logging (`research_memory_log_session`)
-Structured recording of research activities, supporting:
-- Research phase-grouped records (DGP, data preprocessing, modeling, etc.)
-- Systematic storage of experimental results
-- Decision reasoning and alternative options recording
-- **New TODO status tracking** (pending/completed/cancelled)
-- Priority and category management
+The Skill will:
 
-**Usage Examples**:
-```
-"Record today's work in research-memory"
-"Log the results of that experiment I just ran"
-"Help me summarize this session and update TODOs"
-"Mark data processing tasks as completed, add new modeling tasks"
-```
+* Perform keyword matching across `devlog.md` / `decisions.md` / `experiments.csv`;
+* Return up to `search.max_results` matches per your configuration;
+* Attach necessary context (a few lines before and after);
+* Generate a brief summary, telling you:
 
-### 3. Historical Record Query (`research_memory_query_history`)
-Efficient retrieval of historical information:
-- Keyword search (supports Chinese and English)
-- Filter by research phase
-- Cross-file comprehensive search
-- **Advanced filtering options** (date range, content type, result count limit)
+  * What decisions were made at that time;
+  * Which experiments were conducted;
+  * Which alternative approaches/specifications were abandoned.
 
-**Usage Examples**:
-```
-"Why did we abandon the spatial lag model before?"
-"What experiments are related to H2?"
-"Discussion records about variable construction"
-"Query all modeling records from the past week"
-"Find entries about digital skills in experiment records"
-```
+---
 
-## Supported Research Phases
+## Command Line Usage (Optional)
 
-- **DGP**: Data generating process documentation and hypotheses
-- **data_preprocess**: Data cleaning, variable construction, missing value handling
-- **data_analyse**: Descriptive statistics, visualization, correlation analysis
-- **modeling**: Model specification, estimation methods, hyperparameter tuning
-- **robustness**: Robustness checks, alternative specifications, validation tests
-- **writing**: Documentation, paper writing, figure preparation
-- **infra**: Environment configuration, code organization, tool changes
-- **notes**: General observations, intuitive ideas, future ideas
+Besides calling through Claude Code, you can also directly operate `handlers.py` from the command line—suitable for when you temporarily don't have Claude open, or want to use scripts for batch processing.
 
-## 📁 Project Structure
-
-Directory structure after integration into your project:
-
-```
-your-research-project/
-├── SKILL.md                          # Research Memory skill definition
-├── handlers.py                       # Core implementation logic
-├── config/
-│   └── config.json                   # Configuration file
-├── .claude/
-│   └── CLAUDE.md                     # Claude Code project description
-├── memory/                           # Research memory storage
-│   ├── project-overview.md           # Long-term project knowledge
-│   ├── devlog.md                     # Time-ordered development log
-│   ├── decisions.md                  # Key decisions and reasons
-│   ├── experiments.csv               # Structured experiment records
-│   └── todos.md                      # TODO item management
-└── ...                              # Your other project files
-```
-
-## 💻 Advanced CLI Usage
-
-In addition to using through Claude Code, you can directly access more powerful features via command line:
+### 1. Bootstrap
 
 ```bash
-# Basic query
-python3 handlers.py query --question "digital skills"
-
-# Advanced filtering queries
-python3 handlers.py query --question "modeling" --limit 5
-python3 handlers.py query --question "data" --type experiments
-python3 handlers.py query --question "decision" --from-date 2025-12-01 --to-date 2025-12-03
-python3 handlers.py query --question "analysis" --phase modeling
-
-# Complete session recording (supports new TODO format)
-python3 handlers.py log-session --payload-json '{
-  "session_goal": "Complete data modeling analysis",
-  "todos": [
-    {
-      "text": "Data cleaning and preprocessing",
-      "status": "completed",
-      "completion_note": "Completed missing value handling and outlier detection"
-    },
-    {
-      "text": "Build linear regression model",
-      "status": "pending",
-      "priority": "high",
-      "category": "modeling"
-    }
-  ],
-  "phases": {
-    "data_preprocess": "Use winsorize for outlier handling",
-    "modeling": "Estimate basic regression model",
-    "notes": "Found model R²=0.72, heteroskedasticity issue exists"
-  }
-}'
+python handlers.py bootstrap
 ```
 
-### CLI Filtering Options Description
+Output a JSON, including:
 
-- `--question`: Search query keywords (required)
-- `--limit`: Limit result count
-- `--type`: Filter by content type (devlog/decisions/experiments)
-- `--from-date`: Start date (YYYY-MM-DD format)
-- `--to-date`: End date (YYYY-MM-DD format)
-- `--phase`: Filter by research phase (DGP/data_preprocess/modeling, etc.)
+* `project_context`
+* `recent_progress`
+* `current_todos`
+* `work_plan_suggestions`
+* `timestamp`
 
-## 🚀 New Feature Highlights (v0.2)
+### 2. Record Session
 
-### ✅ Complete Configuration
-- **All config fields functional**: `memory_directory`, `encoding`, `csv_delimiter`, etc.
-- **Deep configuration merge**: Support user custom override of default configurations
-- **Multi-encoding support**: Perfect support for Chinese encoding (UTF-8, GBK, etc.)
-
-### ✅ Smart TODO Management
-- **Unified status tracking**: pending/completed/cancelled three states
-- **Priority management**: high/medium/low priority marking
-- **Category system**: Support custom categories (analysis/modeling/writing, etc.)
-- **Auto-completion marking**: Intelligently identify and mark completed TODOs
-
-### ✅ Advanced Search Filtering
-- **Multi-dimensional filtering**: Filter by date range, content type, research phase
-- **Result count control**: Flexibly limit search result count
-- **CLI enhancement**: Complete command-line filtering options
-
-### ✅ Data Integrity Guarantee
-- **Experiment ID collision prevention**: Millisecond timestamp + UUID suffix
-- **File format fixes**: Perfect handling of separators and newlines
-- **Incremental updates**: Intelligently protect existing content, avoid duplication
-
-## Technical Features
-
-### v0 Core Features
-- **Local file storage**: No database needed, uses Markdown + CSV
-- **Incremental updates**: Protect existing content, avoid duplicate recording
-- **Multilingual support**: Full support for Chinese-English mixed recording
-- **Academic orientation**: Optimized for academic research workflow
-
-### v1 Planned Extensions
-- **Database backend**: Upgradable to SQLite/PostgreSQL
-- **Vector search**: Support semantic search
-- **MCP integration**: Support remote memory access
-- **Collaboration features**: Multi-user memory sharing
-
-## 🎯 Use Cases
-
-### Individual Researchers
-- Quick context restoration after long project interruptions
-- Avoid repetitive work and decision forgetting
-- Systematic recording of experiments and results
-
-### Research Teams
-- Knowledge transfer and decision tracing
-- Avoid repetitive errors
-- Maintain team research memory
-
-### Academic Writing
-- Structured recording of methodology sections
-- Systematic management of experimental results
-- Complete tracing of decision-making processes
-
-## 🔄 Recommended Workflow
-
-### Daily Research Start
-```
-User: "Good morning! Help me use research-memory to restore project status and give me a plan for today."
-Claude: [Auto-call bootstrap → Provide recent progress + TODOs + work suggestions]
+```bash
+python handlers.py log-session \
+  --payload-json '{
+    "session_goal": "Test CLI logging",
+    "changes_summary": ["Update README examples"],
+    "phases": {"notes": "First time using research-memory from command line"},
+    "todos": ["Reference this tool in paper.qmd"]
+  }'
 ```
 
-### Research Process Recording
-```
-User: "These experimental results are good, help me record them."
-Claude: [Auto-extract information → Structured recording → Update experiments and TODOs]
-```
+### 3. Query History
 
-### Historical Decision Query
-```
-User: "Why did we choose linear model instead of nonlinear model before?"
-Claude: [Auto-search → Provide decision reasoning + alternatives + related experiment records]
-```
+```bash
+# Simplest: search by keywords
+python handlers.py query --question "spatial lag model"
 
-### Progress Summary
-```
-User: "Help me use research-memory to summarize today's work and update TODOs."
-Claude: [Auto-summarize → Mark completed items → Add new TODOs]
+# With filters: time + phase + type
+python handlers.py query \
+  --question "H2" \
+  --from-date 2025-01-01 \
+  --to-date 2025-12-31 \
+  --phase modeling \
+  --type experiments \
+  --limit 5
 ```
 
-## 🏆 Development Status
-
-### ✅ v0.2 Completed Features
-- **Complete configuration**: All config fields functional, multi-encoding support
-- **Smart TODO management**: Unified status tracking, priority and category management
-- **Advanced search filtering**: Multi-dimensional filtering, CLI enhanced options
-- **Data integrity guarantee**: Experiment ID collision prevention, file format fixes
-- **Backward compatibility**: Maintains compatibility with old format payloads
-
-### 📋 Roadmap
-- **v0.3**: [Planning] Experiment validation and schema enforcement
-- **v0.4**: [Planning] Performance optimization and large file support
-- **v1.0**: [Long-term goal] Database backend + vector search
-
-## 🤝 Contributing Guidelines
-
-Contributions welcome! This project follows standard academic software development practices:
-
-1. **Code Quality**: Maintain clear comments and documentation
-2. **Test Coverage**: Ensure functionality correctness and stability
-3. **User Friendly**: Provide clear usage instructions and examples
-4. **Backward Compatibility**: Smooth migration path from v0 to v1
-
-### Contribution Process
-1. Fork the project
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Create Pull Request
-
-## 📄 License
-
-MIT License - Free to use and modify
-
-## 📞 Contact
-
-- **Author**: Yufei Sun (Adrian) <syfyufei@gmail.com>
-- **Project URL**: https://github.com/syfyufei/research-memory
-- **Issue Reporting**: [GitHub Issues](https://github.com/syfyufei/research-memory/issues)
-
-## 🙏 Acknowledgments
-
-Thanks to all developers and researchers who contribute to the development of academic research tools. This skill aims to help researchers better manage research memory and improve the efficiency and quality of academic research.
+CLI will output JSON, convenient for you to continue using in other scripts.
 
 ---
 
-**Let research memory no longer be lost, let knowledge accumulation be more valuable!** 🧠✨
+## File Format Examples
+
+### `memory/devlog.md`
+
+```markdown
+# Development Log
+
+## 2025-12-03 10:15
+
+**Session Goal**: Run spatial DiD on MCIB_v1.3 to verify H2
+
+**Changes Summary**:
+- Updated 01_clean_mcib.R, added treat_window_180 variable
+- Filtered out municipalities with sample count < 100
+
+### DGP
+Assume treatment effects gradually appear within 0-180 days, use 50km threshold to construct binary spatial weight matrix and row standardize.
+
+### data_analyse
+Plot baseline period cognitive mean comparison for treatment vs control groups, no obvious pre-trend crossover observed.
+
+### modeling
+Estimate two specifications: Model A (TWFE), Model B (TWFE + provincial time trends), H2 coefficients consistent in both directions.
+
+### robustness
+Did simple placebo test (shift treatment time by one year overall), effect not significant.
+
+### notes
+Need to further try event-study and different spatial weight matrices.
 
 ---
 
-This skill aims to help researchers better manage and utilize knowledge accumulation during the research process, improving the efficiency and quality of academic research.
+```
+
+### `memory/experiments.csv` (header example)
+
+```csv
+timestamp,experiment_id,hypothesis,dataset,model,metrics,notes,research_phase
+2025-12-03T10:15:00+09:00,exp_20251203_101500,H2,MCIB_v1.3,"Spatial DiD, W=50km",{"ATT":0.153,"p_value":0.021},"placebo results unstable","DGP,data_analyse,modeling,robustness"
+```
+
+### `memory/todos.md`
+
+```markdown
+# Project TODOs
+
+- [ ] Add k-nearest neighbors based spatial weight matrix comparison
+- [x] Add spatial weight matrix construction explanation in Methods section (completed: 2025-12-03 - via log_session)
+```
+
+### `memory/decisions.md`
+
+```markdown
+# Key Decisions
+
+## 2025-12-03 10:20 — Tentatively adopt Model B as main specification
+
+**Decision**
+Use TWFE with provincial time trends as main specification.
+
+**Rationale**
+Pre-trend smoother, estimation results more stable across different subsamples.
+
+**Alternatives**
+- Keep simple TWFE as main specification
+- Switch to event-study + group-specific trends
+```
+
+---
+
+## Design Principles
+
+* **Local-first**: Everything is local text files, Git-manageable, manually editable;
+* **Skill-first**: Claude Code calls through skill tools, you don't need to care about specific file paths;
+* **Extensible**: Through `MemoryBackend` abstraction layer, can seamlessly switch to database / MCP / remote services in the future;
+* **Semantically aligned with research workflow**:
+
+  * DGP / data_preprocess / data_analyse / modeling / robustness / writing / infra / notes
+  * Instead of just writing a few lines like "changed some code today".
+
+---
+
+## Roadmap
+
+Current version is **v0.x (file backend version)**, future considerations include:
+
+* Support SQLite / DuckDB as backend (stronger query capabilities, support aggregation analysis);
+* Add vector retrieval, provide fuzzy matching for long devlogs;
+* MCP / HTTP service mode, can be shared by multiple projects / Agents;
+* Locking and merge strategies for multi-user collaboration scenarios.
+
+---
+
+## License & Author
+
+* **License**: MIT
+* **Author**: Yufei Sun (Adrian) `<syfyufei@gmail.com>`
+* **Repo**: [https://github.com/syfyufei/research-memory](https://github.com/syfyufei/research-memory)
+
+---
+
+If you frequently juggle multiple large projects
+and dread spending half a day each time "remembering what yesterday's you was thinking",
+try installing `research-memory` into your research repositories—
+let Claude Code become a partner that **truly remembers your entire project history**,
+instead of just a chat interface that only remembers the current conversation.
+
+```
+::contentReference[oaicite:0]{index=0}
+```
