@@ -113,31 +113,6 @@ Core components:
 * **Claude Code** (desktop / VS Code / JetBrains plugins all work)
 * No additional dependencies required
 
-### Manual Installation (Currently Required)
-
-Research Memory is not yet published to Claude Code's plugin marketplace, so manual installation is currently required:
-
-1. **Clone the repository**:
-
-   ```bash
-   git clone https://github.com/syfyufei/research-memory.git
-   cd research-memory
-   ```
-
-2. **Copy to your project**:
-
-   ```bash
-   # Copy the skill files to your existing research project
-   cp -r research-memory/* /path/to/your/research-project/
-   ```
-
-   Or alternatively, copy individual files:
-   ```bash
-   cp handlers.py /path/to/your/research-project/
-   cp -r config/ /path/to/your/research-project/
-   cp -r .claude/ /path/to/your/research-project/
-   ```
-
 ### Plugin Marketplace Installation (Recommended)
 
 You can install Research Memory using Adrian's personal plugin marketplace:

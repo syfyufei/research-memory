@@ -110,31 +110,6 @@ research-memory/
 * **Claude Code**（桌面端 / VS Code / JetBrains 插件均可）
 * 无其他额外依赖
 
-### 手动安装（当前必需）
-
-Research Memory 尚未发布到 Claude Code 插件市场，因此目前需要手动安装：
-
-1. **克隆仓库**：
-
-   ```bash
-   git clone https://github.com/syfyufei/research-memory.git
-   cd research-memory
-   ```
-
-2. **复制到你的项目**：
-
-   ```bash
-   # 将技能文件复制到你现有的研究项目
-   cp -r research-memory/* /path/to/your/research-project/
-   ```
-
-   或者单独复制关键文件：
-   ```bash
-   cp handlers.py /path/to/your/research-project/
-   cp -r config/ /path/to/your/research-project/
-   cp -r .claude/ /path/to/your/research-project/
-   ```
-
 ### 插件市场安装（推荐）
 
 使用 Adrian 的个人插件市场安装 Research Memory：

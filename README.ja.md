@@ -109,31 +109,6 @@ research-memory/
 * **Claude Code**（デスクトップ版 / VS Code / JetBrainsプラグインすべて動作）
 * その他の追加依存関係はありません
 
-### 手動インストール（現在必須）
-
-Research MemoryはまだClaude Codeプラグインマーケットプレイスに公開されていないため、現在は手動インストールが必要です：
-
-1. **リポジトリをクローン**：
-
-   ```bash
-   git clone https://github.com/syfyufei/research-memory.git
-   cd research-memory
-   ```
-
-2. **プロジェクトにコピー**：
-
-   ```bash
-   # スキルファイルを既存の研究プロジェクトにコピー
-   cp -r research-memory/* /path/to/your/research-project/
-   ```
-
-   または個別にファイルをコピー：
-   ```bash
-   cp handlers.py /path/to/your/research-project/
-   cp -r config/ /path/to/your/research-project/
-   cp -r .claude/ /path/to/your/research-project/
-   ```
-
 ### プラグインマーケットプレイスインストール（推奨）
 
 Adrianの個人プラグインマーケットプレイスを使用してResearch Memoryをインストール：
