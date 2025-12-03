@@ -129,10 +129,16 @@ Check that commands appear:
 ```
 
 ```
-# Should see:
+# Should see 9 commands:
 # /research-memory:bootstrap - Restore project context and generate work plan
-# /research-memory:remember - Log current work session to research memory
+# /research-memory:status - Quick project status overview
+# /research-memory:remember - Remember current work session
 # /research-memory:query - Query research memory history
+# /research-memory:timeline - Visualize project timeline
+# /research-memory:summary - Generate comprehensive project summary
+# /research-memory:review - Review work in a specific time period
+# /research-memory:insights - Get AI-powered insights and suggestions
+# /research-memory:checkpoint - Create a named checkpoint of current state
 ```
 
 ### Quick Start
@@ -141,18 +147,31 @@ Research Memory can be used in two ways:
 
 **Option 1: Slash Commands**
 
+Core commands:
 ```bash
 /research-memory:bootstrap    # Restore project context
-/research-memory:remember          # Log current session
+/research-memory:status       # Quick status overview
+/research-memory:remember     # Remember current session
 /research-memory:query        # Search history
+```
+
+Analysis & reporting:
+```bash
+/research-memory:timeline     # Show project timeline
+/research-memory:summary      # Generate full project summary
+/research-memory:review       # Review specific time period
+/research-memory:insights     # Get AI insights
+/research-memory:checkpoint   # Create state checkpoint
 ```
 
 **Option 2: Natural Language**
 
 ```
 "Research Memory, help me get back up to speed with my project"
-"Log this work session to Research Memory"
+"Show me a quick status of the project"
+"Remember this work session"
 "Search for our decisions about spatial lag models"
+"Generate a project summary for my weekly meeting"
 ```
 
 Research Memory will automatically create the necessary `memory/` directory and files on first use.

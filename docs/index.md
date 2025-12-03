@@ -7,8 +7,11 @@ Welcome to the Research Memory documentation hub. This skill transforms how rese
 ### [Blog: Never Lose Your Research Context Again](./blog-introducing-research-memory.md)
 *Introducing Research Memory - a Claude Code skill that bridges the gap between AI conversations and maintains continuity across research sessions.*
 
-### [Installation Guide](../README.md#installation--integration)
+### [Installation Guide](../README.md#installation)
 *Get Research Memory running in your research project in under 5 minutes.*
+
+### [Slash Commands Reference](./commands-reference.md)
+*Complete guide to all 9 slash commands with examples and best practices.*
 
 ### [Core Features](../README.md#quick-overview-tldr)
 *Learn about session bootstrap, logging, and history query capabilities.*
@@ -26,12 +29,24 @@ Instead of starting every conversation with "Where did we leave off?", you can:
 ### Quick Start
 
 ```bash
-# Clone or copy to your research project
-cp -r research-memory/* your-project/
+# Install via Claude Code plugin marketplace
+/plugin marketplace add syfyufei/research-memory
+/plugin install research-memory@research-memory-marketplace
 
-# Use in Claude Code
-"Hey, help me get back up to speed with my research using research-memory"
+# Verify installation
+/help
+# Should see 9 /research-memory:* commands
+
+# Start using
+/research-memory:bootstrap
 ```
+
+Or use natural language:
+```
+"Research Memory, help me get back up to speed with my project"
+```
+
+See the [Commands Reference](./commands-reference.md) for all 9 available commands.
 
 ## 🎯 Use Cases
 
@@ -62,6 +77,7 @@ cp -r research-memory/* your-project/
 ```
 docs/
 ├── index.md                           # This page - documentation hub
+├── commands-reference.md              # Complete slash commands guide
 ├── blog-introducing-research-memory.md # Project introduction and philosophy
 └── [future guides]                     # Advanced usage and tutorials
 ```

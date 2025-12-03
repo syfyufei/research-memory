@@ -125,10 +125,16 @@ Claude Codeで、まずマーケットプレイスを登録します：
 ```
 
 ```
-# 以下が表示されるはず：
+# 9つのコマンドが表示されるはず：
 # /research-memory:bootstrap - プロジェクトコンテキストを復元して作業計画を生成
-# /research-memory:remember - 現在の作業セッションをresearch memoryに記録
-# /research-memory:query - research memoryの履歴を検索
+# /research-memory:status - プロジェクトの簡易ステータス表示
+# /research-memory:remember - 現在の作業セッションを記憶
+# /research-memory:query - 履歴を検索
+# /research-memory:timeline - プロジェクトタイムラインを可視化
+# /research-memory:summary - 包括的なプロジェクトサマリーを生成
+# /research-memory:review - 特定期間の作業をレビュー
+# /research-memory:insights - AIによるインサイトと提案を取得
+# /research-memory:checkpoint - 現在の状態のチェックポイントを作成
 ```
 
 ### クイックスタート
@@ -137,18 +143,31 @@ Research Memoryは2つの方法で使用できます：
 
 **方法1：スラッシュコマンド**
 
+コアコマンド：
 ```bash
 /research-memory:bootstrap    # プロジェクトコンテキストを復元
-/research-memory:remember          # 現在のセッションを記録
+/research-memory:status       # 簡易ステータス概要
+/research-memory:remember     # 現在のセッションを記憶
 /research-memory:query        # 履歴を検索
+```
+
+分析とレポート：
+```bash
+/research-memory:timeline     # プロジェクトタイムラインを表示
+/research-memory:summary      # 完全なプロジェクトサマリーを生成
+/research-memory:review       # 特定期間をレビュー
+/research-memory:insights     # AIインサイトを取得
+/research-memory:checkpoint   # 状態チェックポイントを作成
 ```
 
 **方法2：自然言語**
 
 ```
 "ねえ Research Memory、プロジェクトの状況を把握して"
-"この作業セッションをResearch Memoryに記録して"
+"プロジェクトの簡易ステータスを表示して"
+"この作業セッションを記憶して"
 "空間ラグモデルに関する決定を検索して"
+"週次ミーティング用のプロジェクトサマリーを生成して"
 ```
 
 Research Memoryは初回使用時に必要な`memory/`ディレクトリとファイルを自動的に作成します。
