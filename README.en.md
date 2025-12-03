@@ -2,8 +2,6 @@
 
 [**English**](README.md) | [日本語](README.ja.md) | [简体中文](README.zh.md)
 
----
-
 # `research-memory`
 
 Scientific research often follows these patterns:

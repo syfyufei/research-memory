@@ -2,8 +2,6 @@
 
 [**English**](README.md) | [日本語](README.ja.md) | [简体中文](README.zh.md)
 
----
-
 # `research-memory`
 
 科学研究は、多くの場合、以下のパターンに従います：
