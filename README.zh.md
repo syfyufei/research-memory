@@ -1,10 +1,6 @@
-## 🌐 Language / 言語 / 语言
-
 [**English**](README.md) | [日本語](README.ja.md) | [简体中文](README.zh.md) 
 
-# `research-memory`
-
-科学研究往往：
+学术研究往往：
 
 1. **研究周期一定会比你想的长。**  
 2. **同时开的 repo 一定会比你想的多。**  
