@@ -110,19 +110,9 @@ research-memory/
 * **Claude Code**（桌面端 / VS Code / JetBrains 插件均可）
 * 无其他额外依赖
 
-### 通过插件管理器安装（推荐）
+### 手动安装（当前必需）
 
-最简单的安装方式是通过 Claude Code 插件管理器：
-
-```bash
-claude plugin install research-memory
-```
-
-这将自动下载并安装 Research Memory 插件。
-
-### 手动安装
-
-如果你更喜欢从源代码安装：
+Research Memory 尚未发布到 Claude Code 插件市场，因此目前需要手动安装：
 
 1. **克隆仓库**：
 
@@ -131,21 +121,59 @@ claude plugin install research-memory
    cd research-memory
    ```
 
-2. **从本地路径安装**：
+2. **复制到你的项目**：
 
    ```bash
-   claude plugin install /path/to/research-memory
+   # 将技能文件复制到你现有的研究项目
+   cp -r research-memory/* /path/to/your/research-project/
    ```
+
+   或者单独复制关键文件：
+   ```bash
+   cp handlers.py /path/to/your/research-project/
+   cp -r config/ /path/to/your/research-project/
+   cp -r .claude/ /path/to/your/research-project/
+   ```
+
+### 插件市场安装（推荐）
+
+使用 Adrian 的个人插件市场安装 Research Memory：
+
+1. **添加市场**：
+
+   ```bash
+   claude plugin marketplace add https://github.com/syfyufei/adrian-marketplace
+   ```
+
+2. **安装 Research Memory**：
+
+   ```bash
+   claude plugin install research-memory@adrian-marketplace
+   ```
+
+3. **验证安装**：
+
+   ```bash
+   # 插件现在可以在任何 Claude Code 会话中使用
+   ```
+
+### 手动安装（备选方案）
+
+如果你更喜欢手动安装或在市场安装时遇到问题：
 
 ### 验证安装
 
-确认插件是否正确安装：
+确认文件已正确复制到你的项目：
 
 ```bash
-claude plugin list
+ls -la your-research-project/
 ```
 
-你应该能在已安装插件列表中看到 `research-memory`。
+你应该看到以下关键文件：
+- `handlers.py`
+- `config/config.json`
+- `.claude/CLAUDE.md`
+- `SKILL.md`
 
 ### 快速开始
 
@@ -161,10 +189,18 @@ Research Memory 会在首次使用时自动创建必要的文件和目录。
 
 ### 卸载
 
-如果需要卸载 Research Memory：
+**如果通过市场安装**：
 
 ```bash
-claude plugin remove research-memory
+claude plugin uninstall research-memory
+```
+
+**如果手动安装**：
+
+```bash
+# 从项目中删除技能文件
+rm -f handlers.py config/config.json .claude/CLAUDE.md SKILL.md
+rm -rf config/ .claude/ memory/
 ```
 
 ---

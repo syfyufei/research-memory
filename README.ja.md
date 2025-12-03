@@ -109,19 +109,9 @@ research-memory/
 * **Claude Code**（デスクトップ版 / VS Code / JetBrainsプラグインすべて動作）
 * その他の追加依存関係はありません
 
-### プラグインマネージャー経由のインストール（推奨）
+### 手動インストール（現在必須）
 
-最も簡単なインストール方法はClaude Codeプラグインマネージャーを利用することです：
-
-```bash
-claude plugin install research-memory
-```
-
-これによりResearch Memoryプラグインが自動的にダウンロード・インストールされます。
-
-### 手動インストール
-
-ソースコードからインストールする場合：
+Research MemoryはまだClaude Codeプラグインマーケットプレイスに公開されていないため、現在は手動インストールが必要です：
 
 1. **リポジトリをクローン**：
 
@@ -130,21 +120,59 @@ claude plugin install research-memory
    cd research-memory
    ```
 
-2. **ローカルパスからインストール**：
+2. **プロジェクトにコピー**：
 
    ```bash
-   claude plugin install /path/to/research-memory
+   # スキルファイルを既存の研究プロジェクトにコピー
+   cp -r research-memory/* /path/to/your/research-project/
    ```
+
+   または個別にファイルをコピー：
+   ```bash
+   cp handlers.py /path/to/your/research-project/
+   cp -r config/ /path/to/your/research-project/
+   cp -r .claude/ /path/to/your/research-project/
+   ```
+
+### プラグインマーケットプレイスインストール（推奨）
+
+Adrianの個人プラグインマーケットプレイスを使用してResearch Memoryをインストール：
+
+1. **マーケットプレイスを追加**：
+
+   ```bash
+   claude plugin marketplace add https://github.com/syfyufei/adrian-marketplace
+   ```
+
+2. **Research Memoryをインストール**：
+
+   ```bash
+   claude plugin install research-memory@adrian-marketplace
+   ```
+
+3. **インストールを確認**：
+
+   ```bash
+   # プラグインは任意のClaude Codeセッションで使用可能です
+   ```
+
+### 手動インストール（代替案）
+
+手動インストールを希望する場合やマーケットプレイスで問題が発生した場合：
 
 ### インストールの確認
 
-プラグインが正しくインストールされているか確認：
+ファイルがプロジェクトに正しくコピーされたか確認：
 
 ```bash
-claude plugin list
+ls -la your-research-project/
 ```
 
-インストール済みプラグインリストに `research-memory` が表示されるはずです。
+以下のキーファイルが表示されるはずです：
+- `handlers.py`
+- `config/config.json`
+- `.claude/CLAUDE.md`
+- `SKILL.md`
 
 ### クイックスタート
 
@@ -160,10 +188,18 @@ Research Memoryは初回使用時に必要なファイルとディレクトリ�
 
 ### アンインストール
 
-Research Memoryを削除する必要がある場合：
+**マーケットプレイス経由でインストールした場合**：
 
 ```bash
-claude plugin remove research-memory
+claude plugin uninstall research-memory
+```
+
+**手動でインストールした場合**：
+
+```bash
+# プロジェクトからスキルファイルを削除
+rm -f handlers.py config/config.json .claude/CLAUDE.md SKILL.md
+rm -rf config/ .claude/ memory/
 ```
 
 ---

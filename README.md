@@ -113,19 +113,9 @@ Core components:
 * **Claude Code** (desktop / VS Code / JetBrains plugins all work)
 * No additional dependencies required
 
-### Installation via Plugin Manager (Recommended)
+### Manual Installation (Currently Required)
 
-The easiest way to install Research Memory is through the Claude Code plugin manager:
-
-```bash
-claude plugin install research-memory
-```
-
-This will automatically download and install the Research Memory plugin.
-
-### Manual Installation
-
-If you prefer to install from source:
+Research Memory is not yet published to Claude Code's plugin marketplace, so manual installation is currently required:
 
 1. **Clone the repository**:
 
@@ -134,21 +124,59 @@ If you prefer to install from source:
    cd research-memory
    ```
 
-2. **Install from local path**:
+2. **Copy to your project**:
 
    ```bash
-   claude plugin install /path/to/research-memory
+   # Copy the skill files to your existing research project
+   cp -r research-memory/* /path/to/your/research-project/
    ```
+
+   Or alternatively, copy individual files:
+   ```bash
+   cp handlers.py /path/to/your/research-project/
+   cp -r config/ /path/to/your/research-project/
+   cp -r .claude/ /path/to/your/research-project/
+   ```
+
+### Plugin Marketplace Installation (Recommended)
+
+You can install Research Memory using Adrian's personal plugin marketplace:
+
+1. **Add the marketplace**:
+
+   ```bash
+   claude plugin marketplace add https://github.com/syfyufei/adrian-marketplace
+   ```
+
+2. **Install Research Memory**:
+
+   ```bash
+   claude plugin install research-memory@adrian-marketplace
+   ```
+
+3. **Verify installation**:
+
+   ```bash
+   # The plugin is now ready to use in any Claude Code session
+   ```
+
+### Manual Installation (Alternative)
+
+If you prefer manual installation or encounter issues with the marketplace:
 
 ### Verify Installation
 
-To confirm the plugin is installed correctly:
+To confirm the files are correctly copied to your project:
 
 ```bash
-claude plugin list
+ls -la your-research-project/
 ```
 
-You should see `research-memory` in the list of installed plugins.
+You should see the key files:
+- `handlers.py`
+- `config/config.json`
+- `.claude/CLAUDE.md`
+- `SKILL.md`
 
 ### Quick Start
 
@@ -164,10 +192,18 @@ Research Memory will automatically create the necessary files and directories on
 
 ### Uninstallation
 
-If you need to remove Research Memory:
+**If installed via marketplace**:
 
 ```bash
-claude plugin remove research-memory
+claude plugin uninstall research-memory
+```
+
+**If installed manually**:
+
+```bash
+# Remove the skill files from your project
+rm -f handlers.py config/config.json .claude/CLAUDE.md SKILL.md
+rm -rf config/ .claude/ memory/
 ```
 
 ---
