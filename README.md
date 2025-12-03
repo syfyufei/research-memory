@@ -122,23 +122,40 @@ Then install the plugin from this marketplace:
 
 ### Verify Installation
 
-Test the skill by using it in Claude Code:
+Check that commands appear:
+
+```bash
+/help
+```
 
 ```
-"Research Memory, help me get back up to speed with my project"
+# Should see:
+# /research-memory:bootstrap - Restore project context and generate work plan
+# /research-memory:log - Log current work session to research memory
+# /research-memory:query - Query research memory history
 ```
-
-If the skill is installed correctly, Claude will use the research-memory tools to bootstrap your project context. Research Memory will automatically create the necessary `memory/` directory and files on first use.
 
 ### Quick Start
 
-Simply use natural language in Claude Code:
+Research Memory can be used in two ways:
+
+**Option 1: Slash Commands**
+
+```bash
+/research-memory:bootstrap    # Restore project context
+/research-memory:log          # Log current session
+/research-memory:query        # Search history
+```
+
+**Option 2: Natural Language**
 
 ```
 "Research Memory, help me get back up to speed with my project"
 "Log this work session to Research Memory"
 "Search for our decisions about spatial lag models"
 ```
+
+Research Memory will automatically create the necessary `memory/` directory and files on first use.
 
 ### Uninstallation
 

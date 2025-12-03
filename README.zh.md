@@ -119,23 +119,40 @@ research-memory/
 
 ### 验证安装
 
-在 Claude Code 中测试技能：
+检查命令是否出现：
+
+```bash
+/help
+```
 
 ```
-"Research Memory，帮我恢复一下项目状态"
+# 应该看到：
+# /research-memory:bootstrap - 恢复项目上下文并生成工作计划
+# /research-memory:log - 记录当前工作会话到 research memory
+# /research-memory:query - 查询 research memory 历史记录
 ```
-
-如果技能安装正确，Claude 会使用 research-memory 工具来恢复项目上下文。Research Memory 会在首次使用时自动创建必要的 `memory/` 目录和文件。
 
 ### 快速开始
 
-在 Claude Code 中使用自然语言即可：
+Research Memory 可以通过两种方式使用：
+
+**方式 1：斜杠命令**
+
+```bash
+/research-memory:bootstrap    # 恢复项目上下文
+/research-memory:log          # 记录当前会话
+/research-memory:query        # 搜索历史记录
+```
+
+**方式 2：自然语言**
 
 ```
 "Research Memory，帮我恢复一下项目状态"
 "把这次工作会话记录到 Research Memory"
 "搜索我们关于空间滞后模型的决策"
 ```
+
+Research Memory 会在首次使用时自动创建必要的 `memory/` 目录和文件。
 
 ### 卸载
 

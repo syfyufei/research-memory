@@ -118,23 +118,40 @@ Claude Codeで、まずマーケットプレイスを登録します：
 
 ### インストールの確認
 
-Claude Codeでスキルをテストします：
+コマンドが表示されるか確認します：
+
+```bash
+/help
+```
 
 ```
-"ねえ Research Memory、プロジェクトの状況を把握して"
+# 以下が表示されるはず：
+# /research-memory:bootstrap - プロジェクトコンテキストを復元して作業計画を生成
+# /research-memory:log - 現在の作業セッションをresearch memoryに記録
+# /research-memory:query - research memoryの履歴を検索
 ```
-
-スキルが正しくインストールされていれば、Claudeはresearch-memoryツールを使用してプロジェクトのコンテキストをブートストラップします。Research Memoryは初回使用時に必要な`memory/`ディレクトリとファイルを自動的に作成します。
 
 ### クイックスタート
 
-Claude Codeで自然言語を使用するだけです：
+Research Memoryは2つの方法で使用できます：
+
+**方法1：スラッシュコマンド**
+
+```bash
+/research-memory:bootstrap    # プロジェクトコンテキストを復元
+/research-memory:log          # 現在のセッションを記録
+/research-memory:query        # 履歴を検索
+```
+
+**方法2：自然言語**
 
 ```
 "ねえ Research Memory、プロジェクトの状況を把握して"
 "この作業セッションをResearch Memoryに記録して"
 "空間ラグモデルに関する決定を検索して"
 ```
+
+Research Memoryは初回使用時に必要な`memory/`ディレクトリとファイルを自動的に作成します。
 
 ### アンインストール
 
