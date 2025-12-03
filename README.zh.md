@@ -126,9 +126,10 @@ research-memory/
 ```
 
 ```
-# 应该看到 9 个命令：
+# 应该看到 10 个命令：
 # /research-memory:bootstrap - 恢复项目上下文并生成工作计划
 # /research-memory:status - 快速查看项目状态
+# /research-memory:focus - 获取今日聚焦工作计划
 # /research-memory:remember - 记住当前工作会话
 # /research-memory:query - 查询历史记录
 # /research-memory:timeline - 可视化项目时间线
@@ -148,6 +149,7 @@ Research Memory 可以通过两种方式使用：
 ```bash
 /research-memory:bootstrap    # 恢复项目上下文
 /research-memory:status       # 快速状态概览
+/research-memory:focus        # 获取今日聚焦计划
 /research-memory:remember     # 记住当前会话
 /research-memory:query        # 搜索历史记录
 ```
@@ -166,6 +168,7 @@ Research Memory 可以通过两种方式使用：
 ```
 "Research Memory，帮我恢复一下项目状态"
 "显示项目的快速状态"
+"今天我应该专注做什么？"
 "记住这次工作会话"
 "搜索我们关于空间滞后模型的决策"
 "生成一个项目摘要用于周会汇报"

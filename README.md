@@ -129,9 +129,10 @@ Check that commands appear:
 ```
 
 ```
-# Should see 9 commands:
+# Should see 10 commands:
 # /research-memory:bootstrap - Restore project context and generate work plan
 # /research-memory:status - Quick project status overview
+# /research-memory:focus - Get focused daily work plan
 # /research-memory:remember - Remember current work session
 # /research-memory:query - Query research memory history
 # /research-memory:timeline - Visualize project timeline
@@ -151,6 +152,7 @@ Core commands:
 ```bash
 /research-memory:bootstrap    # Restore project context
 /research-memory:status       # Quick status overview
+/research-memory:focus        # Get today's focused work plan
 /research-memory:remember     # Remember current session
 /research-memory:query        # Search history
 ```
@@ -169,6 +171,7 @@ Analysis & reporting:
 ```
 "Research Memory, help me get back up to speed with my project"
 "Show me a quick status of the project"
+"What should I focus on today?"
 "Remember this work session"
 "Search for our decisions about spatial lag models"
 "Generate a project summary for my weekly meeting"

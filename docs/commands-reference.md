@@ -4,7 +4,7 @@ Complete guide to all Research Memory slash commands.
 
 ## Overview
 
-Research Memory provides 9 slash commands organized into two categories:
+Research Memory provides 10 slash commands organized into two categories:
 
 - **Core Commands**: Essential daily operations
 - **Analysis & Reporting**: Advanced analysis and insights
@@ -73,6 +73,78 @@ Shows a compact dashboard-style summary of your project's current state.
 "Show me a quick status of the project"
 "What's the current state?"
 "Quick project overview"
+```
+
+---
+
+### `/research-memory:focus`
+**Get focused daily work plan**
+
+Generates a prioritized, actionable plan for today based on your TODOs, recent work, and project dependencies.
+
+**What it provides:**
+- **Top Priority**: Single most important task (2-3 hours)
+  - Why it's urgent
+  - What it blocks
+  - Success criteria
+- **Secondary Tasks**: 2-3 important tasks (1-2 hours each)
+- **Stretch Goals**: Nice-to-have tasks for extra time
+- **Time Budget**: Realistic time allocation
+- **Focus Recommendations**: Specific advice on task order and approach
+- **Not Today**: Important tasks that should wait
+
+**Selection criteria:**
+1. Tasks blocking other work
+2. Urgent/time-sensitive items
+3. Dependencies for planned work
+4. Energy level optimization
+5. Momentum building
+
+**Optional arguments:**
+- `--hours N` : Plan for N hours (default: 6-8)
+- `--energy high|normal|low` : Adjust for energy level
+- `--mode deep|varied|quick` : Focus style
+
+**When to use:**
+- Start of workday
+- When feeling overwhelmed
+- After completing a major task
+- When priorities are unclear
+
+**Example usage:**
+```bash
+/research-memory:focus
+/research-memory:focus --hours 4
+/research-memory:focus --energy low --mode quick
+```
+
+**Example output:**
+```
+☀️ Today's Focus (Dec 3, 2025)
+
+⚡ Top Priority (2-3 hours):
+• Fix heteroscedasticity in baseline model
+  → Blocks: robustness tests, paper writing
+  → Context: Found issue yesterday, need log transformation
+  → Success: Breusch-Pagan test p > 0.05
+
+📌 Secondary Tasks (1-2 hours each):
+• Add 3 control variables to model (Est: 1.5h | Impact: High)
+• Update experiment documentation (Est: 1h | Impact: Medium)
+
+🎯 Stretch Goals (if time permits):
+• Start drafting results section
+
+💡 Recommendation: Focus on fixing heteroscedasticity first.
+   Everything else depends on it! Use deep work block (90-120 min).
+```
+
+**Natural language:**
+```
+"What should I focus on today?"
+"Give me a daily work plan"
+"Help me prioritize my tasks"
+"What's the most important thing to do now?"
 ```
 
 ---
@@ -336,6 +408,7 @@ Captures a snapshot of your project state at important milestones.
 |---------|----------|--------|---------------|
 | `bootstrap` | Resume work | Context summary + plan | No |
 | `status` | Quick check | Compact dashboard | No |
+| `focus` | Daily planning | Prioritized task list | No |
 | `remember` | Log session | Confirmation message | Yes (all) |
 | `query` | Find info | Search results | No |
 | `timeline` | Visualize progress | Chronological view | No |
@@ -349,9 +422,11 @@ Captures a snapshot of your project state at important milestones.
 ## Tips & Best Practices
 
 ### Daily Workflow
-1. **Start of day**: `/research-memory:bootstrap`
+1. **Start of day**: `/research-memory:bootstrap` or `/research-memory:focus`
 2. **Quick check**: `/research-memory:status`
 3. **End of day**: `/research-memory:remember`
+
+**Pro tip**: Use `bootstrap` when you need context, use `focus` when you know the context but need to prioritize.
 
 ### Weekly Review
 1. **Review week**: `/research-memory:review --last-week`
@@ -383,6 +458,12 @@ All commands can be triggered with natural language. Examples:
 - "Show me project status"
 - "Quick overview please"
 - "How's the project doing?"
+
+**Focus:**
+- "What should I focus on today?"
+- "Give me a daily work plan"
+- "Help me prioritize my tasks"
+- "What's most important right now?"
 
 **Remember:**
 - "Remember this session"
@@ -423,7 +504,11 @@ All commands can be triggered with natural language. Examples:
 
 ## Command History & Evolution
 
-**v0.3.0** (Current)
+**v0.4.0** (Current)
+- ✨ Added `/focus` command for daily work planning
+- 🎯 Enhanced task prioritization and time management
+
+**v0.3.0**
 - ✨ Added 6 new commands (status, timeline, summary, review, insights, checkpoint)
 - 📝 Renamed `/log` to `/remember` for clarity
 - 🎯 Organized into Core and Analysis categories

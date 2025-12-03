@@ -11,7 +11,7 @@ Welcome to the Research Memory documentation hub. This skill transforms how rese
 *Get Research Memory running in your research project in under 5 minutes.*
 
 ### [Slash Commands Reference](./commands-reference.md)
-*Complete guide to all 9 slash commands with examples and best practices.*
+*Complete guide to all 10 slash commands with examples and best practices.*
 
 ### [Core Features](../README.md#quick-overview-tldr)
 *Learn about session bootstrap, logging, and history query capabilities.*
@@ -35,7 +35,7 @@ Instead of starting every conversation with "Where did we leave off?", you can:
 
 # Verify installation
 /help
-# Should see 9 /research-memory:* commands
+# Should see 10 /research-memory:* commands
 
 # Start using
 /research-memory:bootstrap
@@ -46,7 +46,7 @@ Or use natural language:
 "Research Memory, help me get back up to speed with my project"
 ```
 
-See the [Commands Reference](./commands-reference.md) for all 9 available commands.
+See the [Commands Reference](./commands-reference.md) for all 10 available commands.
 
 ## 🎯 Use Cases
 

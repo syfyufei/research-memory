@@ -125,9 +125,10 @@ Claude Codeで、まずマーケットプレイスを登録します：
 ```
 
 ```
-# 9つのコマンドが表示されるはず：
+# 10のコマンドが表示されるはず：
 # /research-memory:bootstrap - プロジェクトコンテキストを復元して作業計画を生成
 # /research-memory:status - プロジェクトの簡易ステータス表示
+# /research-memory:focus - 今日の集中作業計画を取得
 # /research-memory:remember - 現在の作業セッションを記憶
 # /research-memory:query - 履歴を検索
 # /research-memory:timeline - プロジェクトタイムラインを可視化
@@ -147,6 +148,7 @@ Research Memoryは2つの方法で使用できます：
 ```bash
 /research-memory:bootstrap    # プロジェクトコンテキストを復元
 /research-memory:status       # 簡易ステータス概要
+/research-memory:focus        # 今日の集中計画を取得
 /research-memory:remember     # 現在のセッションを記憶
 /research-memory:query        # 履歴を検索
 ```
@@ -165,6 +167,7 @@ Research Memoryは2つの方法で使用できます：
 ```
 "ねえ Research Memory、プロジェクトの状況を把握して"
 "プロジェクトの簡易ステータスを表示して"
+"今日は何に集中すべき？"
 "この作業セッションを記憶して"
 "空間ラグモデルに関する決定を検索して"
 "週次ミーティング用のプロジェクトサマリーを生成して"
