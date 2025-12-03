@@ -1,7 +1,7 @@
 [**English**](README.md) | [日本語](README.ja.md) | [简体中文](README.zh.md)
 
 <p align="center">
-  <img src="https://maas-log-prod.cn-wlcb.ufileos.com/anthropic/c40838a3-d7bd-48b7-aa5c-ffc7e375eafa/7620065448c91a124ebc9e0cfc0117dc.png?UCloudPublicKey=TOKEN_e15ba47a-d098-4fbd-9afc-a0dcf0e4e621&Expires=1764754013&Signature=RUQRG%2FfdVJadF9efUZBQbRqUHU0%3D" alt="Research Memory Banner" width="100%"/>
+  <img src="https://maas-log-prod.cn-wlcb.ufileos.com/anthropic/c40838a3-d7bd-48b7-aa5c-ffc7e375eafa/361cbdc75b756c1a65f45153a2b60a0a.png?UCloudPublicKey=TOKEN_e15ba47a-d098-4fbd-9afc-a0dcf0e4e621&Expires=1764755166&Signature=j3dFWqiM%2BLqbBUWEMIR5C0jipSk%3D" alt="Research Memory Banner" width="100%"/>
 </p>
 
 We all know how academic research really works:
