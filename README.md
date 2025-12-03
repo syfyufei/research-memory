@@ -113,47 +113,43 @@ Core components:
 * **Claude Code** (desktop / VS Code / JetBrains plugins all work)
 * No additional dependencies required
 
-### Plugin Marketplace Installation (Recommended)
+### Plugin Installation (Recommended)
 
-You can install Research Memory using Adrian's personal plugin marketplace:
+Research Memory follows the same installation pattern as superpowers - you can install it directly as a plugin:
 
-**Option 1: Local Installation (Recommended)**
+**Option 1: Direct Repository Installation (Recommended)**
 
-1. **Clone or download the marketplace**:
+1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/syfyufei/adrian-marketplace.git
+   git clone https://github.com/syfyufei/research-memory.git
    ```
 
-2. **Add the local marketplace**:
+2. **Add as a plugin marketplace**:
 
+   **In terminal:**
    ```bash
-   claude plugin marketplace add /path/to/adrian-marketplace
+   claude plugin marketplace add /path/to/research-memory
+   ```
+
+   **Or in Claude Code session:**
+   ```bash
+   /plugin marketplace add /path/to/research-memory
    ```
 
 3. **Install Research Memory**:
 
+   **In terminal:**
    ```bash
-   claude plugin install research-memory@adrian-marketplace
+   claude plugin install research-memory@research-memory-dev
    ```
 
-**Option 2: Direct GitHub Installation**
-
-1. **Add the marketplace**:
-
+   **Or in Claude Code session:**
    ```bash
-   claude plugin marketplace add https://github.com/syfyufei/adrian-marketplace
+   /plugin install research-memory@research-memory-dev
    ```
 
-2. **Install Research Memory**:
-
-   ```bash
-   claude plugin install research-memory@adrian-marketplace
-   ```
-
-*Note: If GitHub installation fails, use the local installation method above.*
-
-**Quick Install (One-command setup)**:
+**Option 2: Quick Install (One-command setup)**
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/syfyufei/research-memory/main/install.sh | bash

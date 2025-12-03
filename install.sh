@@ -1,25 +1,29 @@
 #!/bin/bash
 
 # Research Memory Installation Script
-# This script installs Research Memory via Adrian's plugin marketplace
+# This script installs Research Memory as a Claude Code plugin (superpowers-style)
 
 set -e
 
 echo "🚀 Installing Research Memory..."
 
-# Check if adrian-marketplace already exists
-if [ -d "adrian-marketplace" ]; then
-    echo "✅ adrian-marketplace already exists locally"
+# Check if research-memory already exists
+if [ -d "research-memory" ]; then
+    echo "✅ research-memory already exists locally"
+    cd research-memory
+    echo "🔄 Updating repository..."
+    git pull
 else
-    echo "📥 Cloning adrian-marketplace..."
-    git clone https://github.com/syfyufei/adrian-marketplace.git
+    echo "📥 Cloning research-memory..."
+    git clone https://github.com/syfyufei/research-memory.git
+    cd research-memory
 fi
 
 echo "🔧 Adding plugin marketplace..."
-claude plugin marketplace add ./adrian-marketplace
+claude plugin marketplace add .
 
 echo "📦 Installing Research Memory plugin..."
-claude plugin install research-memory@adrian-marketplace
+claude plugin install research-memory@research-memory-dev
 
 echo "✨ Research Memory installed successfully!"
 echo ""

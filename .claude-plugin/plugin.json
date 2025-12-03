@@ -1,0 +1,13 @@
+{
+  "name": "research-memory",
+  "description": "Academic research memory management skill for tracking project continuity, decisions, and experiments",
+  "version": "0.2.0",
+  "author": {
+    "name": "Adrian",
+    "email": "syfyufei@gmail.com"
+  },
+  "homepage": "https://github.com/syfyufei/research-memory",
+  "repository": "https://github.com/syfyufei/research-memory",
+  "license": "MIT",
+  "keywords": ["research", "memory", "academic", "logging", "context", "decision-tracking"]
+}

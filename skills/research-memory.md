@@ -1,13 +1,6 @@
 ---
-name: "research-memory"
-version: "0.1.0"
-description: "Academic research project memory management skill for maintaining long-term context across sessions"
-author: "Yufei Sun (Adrian) <syfyufei@gmail.com>"
-license: "MIT"
-python_version: ">=3.8"
-dependencies: []
-tags: ["research", "memory", "academic", "context", "logging"]
-claude_code_minimum_version: "1.0.0"
+name: research-memory
+description: Academic research memory management skill for tracking project continuity, decisions, and experiments across sessions
 ---
 
 # Research Memory Skill
