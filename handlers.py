@@ -18,6 +18,7 @@ from typing import Dict, Any, List, Optional, Union
 from pathlib import Path
 import argparse
 import sys
+import uuid
 
 # Research phases supported by the skill
 RESEARCH_PHASES = [
@@ -27,6 +28,10 @@ RESEARCH_PHASES = [
 
 # Default configuration
 DEFAULT_CONFIG = {
+    "memory_directory": "memory",
+    "timestamp_format": "ISO8601",
+    "csv_delimiter": ",",
+    "encoding": "utf-8",
     "bootstrap": {
         "recent_entries_count": 5,
         "include_todos": True,
@@ -51,29 +56,46 @@ class MemoryBackend:
     v0 implementation uses local files, but this allows easy migration to v1.
     """
 
-    def __init__(self, memory_dir: str = "memory"):
-        self.memory_dir = Path(memory_dir)
+    def __init__(self, memory_dir: Optional[str] = None):
         self.config = self._load_config()
+
+        # Use configured memory directory or parameter
+        if memory_dir is None:
+            memory_dir = self.config.get("memory_directory", "memory")
+
+        self.memory_dir = Path(memory_dir)
+
+        # Store configuration options for easy access
+        self.encoding = self.config.get("encoding", "utf-8")
+        self.csv_delimiter = self.config.get("csv_delimiter", ",")
+        self.timestamp_format = self.config.get("timestamp_format", "ISO8601")
 
     def _load_config(self) -> Dict[str, Any]:
         """Load configuration from config.json or use defaults."""
         config_path = Path("config/config.json")
+        config = DEFAULT_CONFIG.copy()
+
         if config_path.exists():
             try:
                 with open(config_path, 'r', encoding='utf-8') as f:
                     user_config = json.load(f)
-                # Merge with defaults
-                config = DEFAULT_CONFIG.copy()
-                for section, values in user_config.items():
-                    if section in config:
-                        config[section].update(values)
-                    else:
-                        config[section] = values
-                return config
-            except Exception as e:
-                print(f"Warning: Could not load config, using defaults. Error: {e}")
 
-        return DEFAULT_CONFIG
+                # Deep merge user config with defaults
+                self._deep_merge(config, user_config)
+                return config
+
+            except Exception as e:
+                print(f"Warning: Could not load config from {config_path}, using defaults. Error: {e}")
+
+        return config
+
+    def _deep_merge(self, base: Dict[str, Any], update: Dict[str, Any]) -> None:
+        """Deep merge update dict into base dict."""
+        for key, value in update.items():
+            if key in base and isinstance(base[key], dict) and isinstance(value, dict):
+                self._deep_merge(base[key], value)
+            else:
+                base[key] = value
 
     def ensure_memory_directory(self):
         """Create memory directory and files if they don't exist."""
@@ -91,7 +113,7 @@ class MemoryBackend:
         for filename, content in default_files.items():
             file_path = self.memory_dir / filename
             if not file_path.exists():
-                with open(file_path, 'w', encoding='utf-8') as f:
+                with open(file_path, 'w', encoding=self.encoding) as f:
                     f.write(content)
 
     def _get_default_project_overview(self) -> str:
@@ -126,9 +148,135 @@ class MemoryBackend:
         ]
         return ",".join(headers) + "\n"
 
-    def _get_iso_timestamp(self) -> str:
-        """Get current ISO 8601 timestamp."""
-        return datetime.now(timezone.utc).isoformat()
+    def _get_timestamp(self) -> str:
+        """Get current timestamp based on configured format."""
+        now = datetime.now(timezone.utc)
+
+        if self.timestamp_format == "ISO8601":
+            return now.isoformat()
+        elif self.timestamp_format == "YYYY-MM-DD_HH-MM-SS":
+            return now.strftime("%Y-%m-%d_%H-%M-%S")
+        elif self.timestamp_format == "timestamp":
+            return str(int(now.timestamp()))
+        else:
+            # Default to ISO8601 for unknown formats
+            return now.isoformat()
+
+    def _process_todos(self, todos_payload: List[Dict[str, Any]]) -> tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+        """
+        Process unified TODO payload with status tracking.
+
+        Args:
+            todos_payload: List of TODO items with status information
+
+        Returns:
+            Tuple of (new_todos, completed_todos)
+        """
+        new_todos = []
+        completed_todos = []
+
+        for todo in todos_payload:
+            todo_status = todo.get('status', 'pending').lower()
+
+            if todo_status == 'completed':
+                completed_todos.append(todo)
+            elif todo_status in ['pending', 'cancelled']:
+                new_todos.append(todo)
+
+        return new_todos, completed_todos
+
+    def _update_todos_file(self, new_todos: List[Dict[str, Any]], completed_todos: List[Dict[str, Any]], timestamp: str) -> None:
+        """
+        Update todos.md with new and completed items.
+
+        Args:
+            new_todos: List of new TODO items to add
+            completed_todos: List of TODO items to mark as completed
+            timestamp: Current timestamp for marking completion time
+        """
+        todos_path = self.memory_dir / "todos.md"
+
+        # Read existing todos if file exists
+        existing_content = ""
+        if todos_path.exists():
+            with open(todos_path, 'r', encoding=self.encoding) as f:
+                existing_content = f.read()
+
+        # Process completed todos - find and mark them as complete
+        if completed_todos:
+            lines = existing_content.split('\n')
+            updated_lines = []
+
+            for line in lines:
+                line_stripped = line.strip()
+                is_todo_item = re.match(r'^-\s*\[\s*\]', line_stripped)
+
+                if is_todo_item:
+                    # Extract TODO text
+                    todo_text = re.sub(r'^-\s*\[\s*\]\s*', '', line_stripped)
+
+                    # Check if this TODO should be marked as completed
+                    for completed_todo in completed_todos:
+                        completed_text = completed_todo.get('text', '').strip()
+                        completion_note = completed_todo.get('completion_note', '')
+
+                        if todo_text == completed_text:
+                            # Mark as completed with timestamp
+                            timestamp_short = timestamp[:10]
+                            completion_entry = f"- [x] {todo_text} (completed: {timestamp_short}"
+                            if completion_note:
+                                completion_entry += f" - {completion_note}"
+                            completion_entry += ")"
+                            updated_lines.append(completion_entry)
+                            break
+                    else:
+                        # No match found, keep original line
+                        updated_lines.append(line)
+                else:
+                    # Not a TODO item, keep as is
+                    updated_lines.append(line)
+
+            existing_content = '\n'.join(updated_lines)
+
+        # Add new todos
+        if new_todos:
+            # Prepare new todos section
+            new_todos_section = f"\n### {timestamp[:10]} {timestamp[11:16]}\n\n"
+
+            for todo in new_todos:
+                todo_text = todo.get('text', '')
+                priority = todo.get('priority', 'medium')
+                category = todo.get('category', '')
+
+                # Format with priority and category if specified
+                todo_entry = "- [ ]"
+                if priority != 'medium':
+                    todo_entry += f" [{priority.upper()}]"
+                if category:
+                    todo_entry += f" [{category}]"
+                todo_entry += f" {todo_text}"
+
+                new_todos_section += todo_entry + "\n"
+
+            new_todos_section += "\n"
+
+            # Append to existing content
+            existing_content += new_todos_section
+
+        # Write updated content back to file
+        with open(todos_path, 'w', encoding=self.encoding) as f:
+            f.write(existing_content)
+
+    def _generate_experiment_id(self) -> str:
+        """
+        Generate collision-resistant experiment ID using timestamp + UUID.
+
+        Returns:
+            Unique experiment ID in format: exp_YYYYMMDD_HHMMSS_UUID
+        """
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S%f')
+        unique_suffix = uuid.uuid4().hex[:8]  # Use 8 characters for better uniqueness
+        return f"exp_{timestamp}_{unique_suffix}"
 
 
 def bootstrap_context(config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
@@ -153,19 +301,19 @@ def bootstrap_context(config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]
         "recent_progress": [],
         "current_todos": [],
         "work_plan_suggestions": [],
-        "timestamp": backend._get_iso_timestamp()
+        "timestamp": backend._get_timestamp()
     }
 
     # Read project overview
     overview_path = backend.memory_dir / "project-overview.md"
     if overview_path.exists():
-        with open(overview_path, 'r', encoding='utf-8') as f:
+        with open(overview_path, 'r', encoding=backend.encoding) as f:
             result["project_context"] = f.read()
 
     # Read recent devlog entries
     devlog_path = backend.memory_dir / "devlog.md"
     if devlog_path.exists():
-        with open(devlog_path, 'r', encoding='utf-8') as f:
+        with open(devlog_path, 'r', encoding=backend.encoding) as f:
             content = f.read()
 
         # Extract recent entries (simplified - looks for date headers)
@@ -176,7 +324,7 @@ def bootstrap_context(config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]
     if include_todos:
         todos_path = backend.memory_dir / "todos.md"
         if todos_path.exists():
-            with open(todos_path, 'r', encoding='utf-8') as f:
+            with open(todos_path, 'r', encoding=backend.encoding) as f:
                 content = f.read()
 
             # Extract TODO items (lines with - [ ] or - [x])
@@ -223,20 +371,25 @@ def log_session(payload: Dict[str, Any]) -> None:
     backend = MemoryBackend()
     backend.ensure_memory_directory()
 
-    timestamp = backend._get_iso_timestamp()
+    timestamp = backend._get_timestamp()
     date_header = f"## {timestamp[:10]} {timestamp[11:16]}"
 
     # Update devlog.md
     devlog_path = backend.memory_dir / "devlog.md"
 
-    # Create session entry
-    session_entry = f"""{date_header}
+    # Ensure devlog.md exists and has proper format
+    if not devlog_path.exists():
+        with open(devlog_path, 'w', encoding=backend.encoding) as f:
+            f.write("# Development Log\n\n")
 
-**Session Goal**: {payload.get('session_goal', 'Not specified')}
+    # Read existing content to check ending
+    with open(devlog_path, 'r', encoding=backend.encoding) as f:
+        existing_content = f.read()
 
-**Changes Summary**: {payload.get('changes_summary', 'No changes recorded')}
-
-"""
+    # Create session entry with proper separation
+    session_entry = f"{date_header}\n\n"
+    session_entry += f"**Session Goal**: {payload.get('session_goal', 'Not specified')}\n\n"
+    session_entry += f"**Changes Summary**: {payload.get('changes_summary', 'No changes recorded')}\n\n"
 
     # Add research phase sections
     phases = payload.get('phases', {})
@@ -244,22 +397,30 @@ def log_session(payload: Dict[str, Any]) -> None:
         if phase in phases and phases[phase]:
             session_entry += f"### {phase.upper()}\n{phases[phase]}\n\n"
 
-    # Append to devlog
-    with open(devlog_path, 'a', encoding='utf-8') as f:
-        f.write(session_entry + "---\n\n")
+    session_entry += "---\n\n"
+
+    # Ensure proper separation from existing content
+    if existing_content and not existing_content.endswith('\n\n'):
+        # Add separation if needed
+        with open(devlog_path, 'a', encoding=backend.encoding) as f:
+            f.write('\n' + session_entry)
+    else:
+        # Append normally
+        with open(devlog_path, 'a', encoding=backend.encoding) as f:
+            f.write(session_entry)
 
     # Update experiments.csv
     experiments = payload.get('experiments', [])
     if experiments:
         experiments_path = backend.memory_dir / "experiments.csv"
 
-        with open(experiments_path, 'a', newline='', encoding='utf-8') as csvfile:
-            writer = csv.writer(csvfile)
+        with open(experiments_path, 'a', newline='', encoding=backend.encoding) as csvfile:
+            writer = csv.writer(csvfile, delimiter=backend.csv_delimiter)
 
             for exp in experiments:
                 row = [
                     timestamp,
-                    f"exp_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+                    backend._generate_experiment_id(),
                     exp.get('hypothesis', ''),
                     exp.get('dataset', ''),
                     exp.get('model', ''),
@@ -275,7 +436,7 @@ def log_session(payload: Dict[str, Any]) -> None:
     if decisions:
         decisions_path = backend.memory_dir / "decisions.md"
 
-        with open(decisions_path, 'a', encoding='utf-8') as f:
+        with open(decisions_path, 'a', encoding=backend.encoding) as f:
             for decision in decisions:
                 decision_entry = f"""## {timestamp}
 
@@ -290,16 +451,20 @@ def log_session(payload: Dict[str, Any]) -> None:
 """
                 f.write(decision_entry)
 
-    # Update todos.md
+    # Update todos.md with unified TODO management
     todos = payload.get('todos', [])
     if todos:
-        todos_path = backend.memory_dir / "todos.md"
+        # Handle both old format (list of strings) and new format (list of dicts)
+        if todos and isinstance(todos[0], str):
+            # Convert old format to new unified format
+            unified_todos = [{"text": todo, "status": "pending"} for todo in todos]
+        else:
+            # Already in new format
+            unified_todos = todos
 
-        with open(todos_path, 'a', encoding='utf-8') as f:
-            f.write(f"\n### {timestamp[:10]} {timestamp[11:16]}\n\n")
-            for todo in todos:
-                f.write(f"- [ ] {todo}\n")
-            f.write("\n")
+        # Process todos and update file
+        new_todos, completed_todos = backend._process_todos(unified_todos)
+        backend._update_todos_file(new_todos, completed_todos, timestamp)
 
 
 def query_history(query: str, filters: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
@@ -308,7 +473,7 @@ def query_history(query: str, filters: Optional[Dict[str, Any]] = None) -> Dict[
 
     Args:
         query: Search query string
-        filters: Optional filters (date_range, phase, content_type)
+        filters: Optional filters (date_range, phase, content_type, limit)
 
     Returns:
         Dictionary containing search results and summaries
@@ -316,9 +481,19 @@ def query_history(query: str, filters: Optional[Dict[str, Any]] = None) -> Dict[
     backend = MemoryBackend()
     backend.ensure_memory_directory()
 
-    max_results = backend.config["search"]["max_results"]
+    # Apply filters or use defaults
+    if filters is None:
+        filters = {}
+
+    max_results = filters.get('limit', backend.config["search"]["max_results"])
     include_context = backend.config["search"]["include_context"]
     context_lines = backend.config["search"]["context_lines"]
+
+    # Parse date filters
+    from_date = filters.get('from_date')
+    to_date = filters.get('to_date')
+    phase_filter = filters.get('phase')
+    type_filter = filters.get('type')
 
     # Simple keyword-based search (v0 implementation)
     keywords = re.findall(r'\w+', query.lower())
@@ -327,26 +502,31 @@ def query_history(query: str, filters: Optional[Dict[str, Any]] = None) -> Dict[
         "query": query,
         "matches": [],
         "summary": "",
-        "timestamp": backend._get_iso_timestamp()
+        "timestamp": backend._get_timestamp()
     }
 
-    # Search devlog.md
-    devlog_path = backend.memory_dir / "devlog.md"
-    if devlog_path.exists():
-        matches = _search_in_file(devlog_path, keywords, "devlog", include_context, context_lines)
-        results["matches"].extend(matches)
+    # Search based on type filter
+    if not type_filter or type_filter == "devlog":
+        devlog_path = backend.memory_dir / "devlog.md"
+        if devlog_path.exists():
+            matches = _search_in_file(devlog_path, keywords, "devlog", include_context, context_lines, backend.encoding)
+            # Apply date and phase filters to devlog results
+            filtered_matches = _apply_filters_to_matches(matches, from_date, to_date, phase_filter)
+            results["matches"].extend(filtered_matches)
 
-    # Search decisions.md
-    decisions_path = backend.memory_dir / "decisions.md"
-    if decisions_path.exists():
-        matches = _search_in_file(decisions_path, keywords, "decisions", include_context, context_lines)
-        results["matches"].extend(matches)
+    if not type_filter or type_filter == "decisions":
+        decisions_path = backend.memory_dir / "decisions.md"
+        if decisions_path.exists():
+            matches = _search_in_file(decisions_path, keywords, "decisions", include_context, context_lines, backend.encoding)
+            filtered_matches = _apply_filters_to_matches(matches, from_date, to_date, phase_filter)
+            results["matches"].extend(filtered_matches)
 
-    # Search experiments.csv
-    experiments_path = backend.memory_dir / "experiments.csv"
-    if experiments_path.exists():
-        matches = _search_in_csv(experiments_path, keywords, "experiments")
-        results["matches"].extend(matches)
+    if not type_filter or type_filter == "experiments":
+        experiments_path = backend.memory_dir / "experiments.csv"
+        if experiments_path.exists():
+            matches = _search_in_csv(experiments_path, keywords, "experiments", backend.encoding, backend.csv_delimiter)
+            filtered_matches = _apply_filters_to_matches(matches, from_date, to_date, phase_filter)
+            results["matches"].extend(filtered_matches)
 
     # Sort by relevance (simplified - count keyword matches)
     results["matches"].sort(key=lambda x: x.get("relevance", 0), reverse=True)
@@ -362,12 +542,12 @@ def query_history(query: str, filters: Optional[Dict[str, Any]] = None) -> Dict[
 
 
 def _search_in_file(file_path: Path, keywords: List[str], source_type: str,
-                   include_context: bool, context_lines: int) -> List[Dict[str, Any]]:
+                   include_context: bool, context_lines: int, encoding: str = 'utf-8') -> List[Dict[str, Any]]:
     """Search for keywords in a text file."""
     matches = []
 
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, 'r', encoding=encoding) as f:
             lines = f.readlines()
 
         for i, line in enumerate(lines):
@@ -396,13 +576,14 @@ def _search_in_file(file_path: Path, keywords: List[str], source_type: str,
     return matches
 
 
-def _search_in_csv(file_path: Path, keywords: List[str], source_type: str) -> List[Dict[str, Any]]:
+def _search_in_csv(file_path: Path, keywords: List[str], source_type: str,
+                   encoding: str = 'utf-8', csv_delimiter: str = ',') -> List[Dict[str, Any]]:
     """Search for keywords in a CSV file."""
     matches = []
 
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            reader = csv.DictReader(f)
+        with open(file_path, 'r', encoding=encoding) as f:
+            reader = csv.DictReader(f, delimiter=csv_delimiter)
 
             for i, row in enumerate(reader):
                 # Search all fields for keywords
@@ -446,6 +627,11 @@ def main():
     # Query command
     query_parser = subparsers.add_parser('query', help='Query research history')
     query_parser.add_argument('--question', required=True, help='Search query')
+    query_parser.add_argument('--from-date', help='Filter from date (YYYY-MM-DD)')
+    query_parser.add_argument('--to-date', help='Filter to date (YYYY-MM-DD)')
+    query_parser.add_argument('--phase', choices=RESEARCH_PHASES, help='Filter by research phase')
+    query_parser.add_argument('--type', choices=['devlog', 'decisions', 'experiments'], help='Filter by content type')
+    query_parser.add_argument('--limit', type=int, help='Maximum number of results')
 
     args = parser.parse_args()
 
@@ -463,12 +649,80 @@ def main():
             sys.exit(1)
 
     elif args.command == 'query':
-        result = query_history(args.question)
+        # Build filters from arguments
+        filters = {}
+        if hasattr(args, 'from_date') and args.from_date:
+            filters['from_date'] = args.from_date
+        if hasattr(args, 'to_date') and args.to_date:
+            filters['to_date'] = args.to_date
+        if hasattr(args, 'phase') and args.phase:
+            filters['phase'] = args.phase
+        if hasattr(args, 'type') and args.type:
+            filters['type'] = args.type
+        if hasattr(args, 'limit') and args.limit:
+            filters['limit'] = args.limit
+
+        result = query_history(args.question, filters)
         print(json.dumps(result, indent=2, ensure_ascii=False))
 
     else:
         parser.print_help()
         sys.exit(1)
+
+
+def _apply_filters_to_matches(matches: List[Dict[str, Any]], from_date: Optional[str],
+                             to_date: Optional[str], phase_filter: Optional[str]) -> List[Dict[str, Any]]:
+    """
+    Apply date and phase filters to search matches.
+
+    Args:
+        matches: List of search matches
+        from_date: Filter start date (YYYY-MM-DD format)
+        to_date: Filter end date (YYYY-MM-DD format)
+        phase_filter: Filter by research phase
+
+    Returns:
+        Filtered list of matches
+    """
+    filtered_matches = []
+
+    for match in matches:
+        # Extract date from match
+        match_date = None
+
+        if 'timestamp' in match:
+            # For experiments.csv matches
+            match_date = match['timestamp'][:10]
+        elif 'context' in match:
+            # For devlog/decisions matches, try to extract date from context
+            context = match['context'] if isinstance(match['context'], str) else str(match['context'])
+            # Look for date patterns like "## 2025-11-27" or "2025-11-27T"
+            date_match = re.search(r'##\s*(\d{4}-\d{2}-\d{2})|(\d{4}-\d{2}-\d{2})T', context)
+            if date_match:
+                match_date = date_match.group(1) or date_match.group(2)
+
+        # Apply date filter
+        if from_date and match_date:
+            if match_date < from_date:
+                continue
+
+        if to_date and match_date:
+            if match_date > to_date:
+                continue
+
+        # Apply phase filter
+        if phase_filter:
+            content = match.get('content', '')
+            context = match.get('context', '')
+            if not isinstance(context, str):
+                context = str(context)
+            content += context
+            if phase_filter.lower() not in content.lower():
+                continue
+
+        filtered_matches.append(match)
+
+    return filtered_matches
 
 
 if __name__ == '__main__':

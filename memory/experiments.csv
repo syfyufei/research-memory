@@ -10,3 +10,12 @@ timestamp,experiment_id,hypothesis,dataset,model,spec,metrics,notes,research_pha
 2025-12-01T09:20:00,exp_20251201_01,"教育存在内生性",CFPS_final,工具变量回归,"2SLS: parents_education as IV","{first_stage_f: 28.4, education_coef_2sls: 0.078, education_coef_ols: 0.083}","工具变量有效，教育系数略降但依然显著",robustness
 2025-12-01T14:10:00,exp_20251201_02,"结果在不同样本中稳健",CFPS_final,样本分割回归,"split by age_group(<30, 30-50, >50)","{young_r2: 0.71, middle_r2: 0.79, old_r2: 0.68}","模型在不同年龄组中均显著",robustness
 2025-12-02T09:15:00,exp_20251202_01,"H1: 数字化技能教育显著提高收入",CFPS_final,分位数回归,"quantile(0.25,0.5,0.75) on digital_skill","{q25_coef: 0.089, q50_coef: 0.121, q75_coef: 0.156}","数字化技能对高收入群体回报更高",robustness2025-12-03T00:55:35.899084+00:00,exp_20251203_085535,教育存在内生性，需要工具变量处理,CFPS_final,2SLS工具变量回归,,"{""first_stage_f"": 28.4, ""education_coef_2sls"": 0.078, ""education_coef_ols"": 0.083, ""weak_instrument_test"": ""Passed"", ""endogeneity_test"": ""Significant""}",工具变量有效，教育系数略降但依然显著,"modeling,robustness,data_analyse,notes"
+2025-12-03T02:21:36.746588+00:00,exp_20251203_102136746840_cd9644b4,测试UUID防碰撞,test_data,test_model,,"{""accuracy"": 0.95}",验证新的ID生成机制,notes
+2025-12-03T02:24:41.291256+00:00,exp_20251203_102441291634_507f6579,TODO管理系统增强验证,demo_data,test_validation,,"{""success"": true, ""features_implemented"": 5}",验证新TODO功能正常工作,notes
+2025-12-03T02:24:41.443366+00:00,exp_20251203_102441443537_6398d982,唯一性测试实验 1,test_data,test_model_1,,"{""test_id"": 1, ""success"": true}",验证实验ID唯一性，测试 1,notes
+2025-12-03T02:24:41.443366+00:00,exp_20251203_102441443579_671d76e8,唯一性测试实验 2,test_data,test_model_2,,"{""test_id"": 2, ""success"": true}",验证实验ID唯一性，测试 2,notes
+2025-12-03T02:24:41.443366+00:00,exp_20251203_102441443591_bff97503,唯一性测试实验 3,test_data,test_model_3,,"{""test_id"": 3, ""success"": true}",验证实验ID唯一性，测试 3,notes
+2025-12-03T02:26:16.112070+00:00,exp_20251203_102616112299_42dbef59,TODO管理系统增强验证,demo_data,test_validation,,"{""success"": true, ""features_implemented"": 5}",验证新TODO功能正常工作,notes
+2025-12-03T02:26:16.269797+00:00,exp_20251203_102616269999_fc7252b5,唯一性测试实验 1,test_data,test_model_1,,"{""test_id"": 1, ""success"": true}",验证实验ID唯一性，测试 1,notes
+2025-12-03T02:26:16.269797+00:00,exp_20251203_102616270046_47d2d96f,唯一性测试实验 2,test_data,test_model_2,,"{""test_id"": 2, ""success"": true}",验证实验ID唯一性，测试 2,notes
+2025-12-03T02:26:16.269797+00:00,exp_20251203_102616270060_42cb345b,唯一性测试实验 3,test_data,test_model_3,,"{""test_id"": 3, ""success"": true}",验证实验ID唯一性，测试 3,notes

@@ -1,11 +1,29 @@
 {
+  "_comment": "Research Memory Skill Configuration - All fields are now implemented and functional",
+  "memory_directory": "memory",
+  "_memory_directory_comment": "Directory name for storing memory files (relative to project root)",
+
+  "encoding": "utf-8",
+  "_encoding_comment": "File encoding for all text files (utf-8, gbk, etc.)",
+
+  "csv_delimiter": ",",
+  "_csv_delimiter_comment": "Delimiter for CSV files (comma, semicolon, tab)",
+
+  "timestamp_format": "ISO8601",
+  "_timestamp_format_comment": "Format for timestamps: 'ISO8601', 'YYYY-MM-DD_HH-MM-SS', or 'timestamp'",
+
   "bootstrap": {
     "recent_entries_count": 5,
+    "_recent_entries_count_comment": "Number of recent devlog entries to show in bootstrap",
     "include_todos": true,
-    "suggest_work_plan": true
+    "_include_todos_comment": "Whether to include current TODOs in bootstrap context",
+    "suggest_work_plan": true,
+    "_suggest_work_plan_comment": "Whether to generate work plan suggestions in bootstrap"
   },
+
   "logging": {
     "auto_timestamp": true,
+    "_auto_timestamp_comment": "Whether to automatically add timestamps to entries",
     "phase_sections": [
       "DGP",
       "data_preprocess",
@@ -16,21 +34,23 @@
       "infra",
       "notes"
     ],
+    "_phase_sections_comment": "Supported research phases for categorizing entries",
     "experiment_schema": [
       "hypothesis",
       "dataset",
       "model",
       "metrics",
       "notes"
-    ]
+    ],
+    "_experiment_schema_comment": "Required fields for experiment validation"
   },
+
   "search": {
     "max_results": 10,
+    "_max_results_comment": "Maximum number of search results to return",
     "include_context": true,
-    "context_lines": 3
-  },
-  "memory_directory": "memory",
-  "timestamp_format": "ISO8601",
-  "csv_delimiter": ",",
-  "encoding": "utf-8"
+    "_include_context_comment": "Whether to include surrounding context in search results",
+    "context_lines": 3,
+    "_context_lines_comment": "Number of context lines to include before/after matches"
+  }
 }

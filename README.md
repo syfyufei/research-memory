@@ -1,230 +1,348 @@
-# Research Memory Skill
+## 🌐 Language / 言語 / 语言
 
-一个为学术研究项目设计的 Claude Code Skill，用于管理和记录项目级的长期记忆，帮助研究人员在不同会话之间保持上下文连续性。
+[**English**](README.md) | [日本語](README.ja.md) | [简体中文](README.zh.md) 
 
-## 项目概述
+---
 
-这个 Skill 解决了学术研究中的一个核心问题：如何有效地记录和管理研究过程中的知识、决策和实验轨迹，以便在项目中断后能够快速恢复上下文，避免重复性工作。
+A Claude Code skill designed for academic research projects to manage and record project-level long-term memory, helping researchers maintain context continuity between different sessions.
 
-## 核心功能
+## Project Overview
 
-### 1. 研究上下文恢复 (`research_memory_bootstrap`)
-快速恢复项目状态，包括：
-- 最近的研究进展摘要
-- 当前的待办事项
-- 基于历史记录的工作建议
+This skill addresses a core problem in academic research: how to effectively record and manage knowledge, decisions, and experimental trajectories throughout the research process, enabling quick context restoration after project interruptions and avoiding repetitive work.
 
-**使用示例**：
-```
-"帮我用 research-memory 恢复一下上次做到哪一步"
-"今天的研究计划是什么？"
-```
+## 🚀 Quick Start
 
-### 2. 研究会话记录 (`research_memory_log_session`)
-结构化记录研究活动，支持：
-- 按研究阶段分组的记录（DGP、数据预处理、建模等）
-- 实验结果的系统化存储
-- 决策理由和备选方案记录
-- 自动化的 TODO 管理
+### 1. Requirements
 
-**使用示例**：
-```
-"把今天的工作记到 research-memory 里"
-"记录刚才这个实验的结果"
-"帮我总结这个 session 并更新 TODO"
-```
+- **Python**: 3.8 or higher
+- **Claude Code**: Latest version
+- No additional dependencies required (uses Python standard library)
 
-### 3. 历史记录查询 (`research_memory_query_history`)
-高效检索历史信息：
-- 关键词搜索（支持中文和英文）
-- 按研究阶段筛选
-- 跨文件综合搜索
+### 2. Installation in Existing Projects
 
-**使用示例**：
-```
-"我们之前为什么放弃过空间 lag 模型？"
-"H2 相关的实验有哪些？"
-"关于变量构造的讨论记录"
-```
-
-## 支持的研究阶段
-
-- **DGP**: 数据生成过程文档和假设
-- **data_preprocess**: 数据清洗、变量构造、缺失值处理
-- **data_analyse**: 描述性统计、可视化、相关性分析
-- **modeling**: 模型设定、估计方法、超参数调优
-- **robustness**: 稳健性检验、替代设定、验证测试
-- **writing**: 文档编写、论文写作、图表准备
-- **infra**: 环境配置、代码组织、工具变更
-- **notes**: 一般观察、直觉想法、未来想法
-
-## 文件结构
-
-```
-research-memory/
-├── SKILL.md                          # 技能定义和主要实现
-├── handlers.py                       # Python 核心逻辑
-├── README.md                         # 项目说明
-├── config/
-│   └── config.json                   # 配置文件
-├── .claude/
-│   └── CLAUDE.md                     # Claude Code 项目说明
-├── memory/                           # 研究记忆存储
-│   ├── project-overview.md           # 项目概述
-│   ├── devlog.md                     # 开发日志
-│   ├── decisions.md                  # 关键决策记录
-│   ├── experiments.csv               # 实验数据
-│   └── todos.md                      # 待办事项
-└── examples/                         # 使用示例（待完善）
-```
-
-## 快速开始
-
-### 1. 安装和配置
-
-项目不需要额外的依赖，只需要 Python 3.8+：
+Integrate the research-memory skill into your academic research project:
 
 ```bash
-# 确保技能文件已正确创建
-ls -la SKILL.md handlers.py config/
+# 1. Clone or download this repository
+git clone https://github.com/syfyufei/research-memory.git
+cd research-memory
 
-# 测试基础功能
-python3 handlers.py bootstrap
+# 2. Copy core files to your project
+cp SKILL.md /path/to/your/project/
+cp handlers.py /path/to/your/project/
+cp -r config/ /path/to/your/project/
+cp -r .claude/ /path/to/your/project/
+
+# 3. Create memory directory (optional, will be created automatically on first use)
+mkdir -p /path/to/your/project/memory
 ```
 
-### 2. 在 Claude Code 中使用
+### 3. Verify Installation
 
-技能会自动被 Claude Code 识别。你可以通过自然语言触发：
-
-#### 开始工作会话
-```
-用户: 早上好！帮我用 research-memory 恢复一下项目状态。
-Claude: [自动调用 bootstrap 功能]
-```
-
-#### 记录研究进展
-```
-用户: 刚才的回归结果很好，帮我记录一下。
-Claude: [自动提取信息并调用 log_session 功能]
-```
-
-#### 查询历史信息
-```
-用户: 我们之前讨论过数字化技能的测量方法吗？
-Claude: [自动调用 query_history 功能]
-```
-
-### 3. CLI 使用
-
-也可以直接通过命令行使用：
+Test in your project directory:
 
 ```bash
-# 恢复项目上下文
+# Test basic functionality
 python3 handlers.py bootstrap
 
-# 查询历史记录
-python3 handlers.py query --question "数字化技能"
-
-# 记录会话（需要 JSON 格式的 payload）
-python3 handlers.py log-session --payload-json '{"session_goal": "测试记录", "changes_summary": "创建示例文件"}'
+# Test search functionality
+python3 handlers.py query --question "test"
 ```
 
-## 配置选项
+### 4. Start Using
 
-通过 `config/config.json` 可以自定义：
+In Claude Code, you can trigger research-memory functionality through natural language:
+
+```
+User: "Good morning! Help me restore the project status using research-memory."
+Claude: [Automatically analyzes project and restores context]
+```
+
+## 🔧 Configuration Options
+
+Customize skill behavior through `config/config.json`:
 
 ```json
 {
+  "memory_directory": "memory",
+  "encoding": "utf-8",
+  "csv_delimiter": ",",
+  "timestamp_format": "ISO8601",
   "bootstrap": {
-    "recent_entries_count": 5,      // 恢复时显示的最近条目数
-    "include_todos": true,          // 是否包含待办事项
-    "suggest_work_plan": true       // 是否建议工作计划
+    "recent_entries_count": 5,
+    "include_todos": true,
+    "suggest_work_plan": true
   },
   "search": {
-    "max_results": 10,              // 搜索最大结果数
-    "include_context": true,        // 是否包含上下文
-    "context_lines": 3              // 上下文行数
+    "max_results": 10,
+    "include_context": true,
+    "context_lines": 3
   }
 }
 ```
 
-## 技术特性
+### Configuration Description
 
-### v0 特点
-- **本地文件存储**: 无需数据库，使用 Markdown + CSV
-- **增量更新**: 保护已有内容，避免重复记录
-- **中文支持**: 完全支持中英文混合记录
-- **学术导向**: 针对学术研究工作流优化
+- `memory_directory`: Memory file storage directory (default: "memory")
+- `encoding`: File encoding format (default: "utf-8")
+- `timestamp_format`: Timestamp format ("ISO8601", "YYYY-MM-DD_HH-MM-SS", "timestamp")
+- `bootstrap.recent_entries_count`: Number of recent entries to show during recovery
+- `search.max_results`: Maximum number of search results to return
 
-### v1 预留扩展
-- **数据库后端**: 可升级为 SQLite/PostgreSQL
-- **向量搜索**: 支持语义搜索
-- **MCP 集成**: 支持远程记忆访问
-- **协作功能**: 多用户记忆共享
+## 🎯 Core Features
 
-## 使用场景
+### 1. Research Context Recovery (`research_memory_bootstrap`)
+Quickly restore project status, including:
+- Recent research progress summary
+- Current TODO items
+- Work suggestions based on historical records
 
-### 个人研究者
-- 在长时间项目中断后快速恢复上下文
-- 避免重复性工作和决策遗忘
-- 系统化记录实验和结果
+**Usage Examples**:
+```
+"Help me use research-memory to restore where I left off"
+"What's today's research plan?"
+"What's the current project status and next steps?"
+```
 
-### 研究团队
-- 知识传递和决策追溯
-- 避免重复性错误
-- 维护团队的研究记忆
+### 2. Research Session Logging (`research_memory_log_session`)
+Structured recording of research activities, supporting:
+- Research phase-grouped records (DGP, data preprocessing, modeling, etc.)
+- Systematic storage of experimental results
+- Decision reasoning and alternative options recording
+- **New TODO status tracking** (pending/completed/cancelled)
+- Priority and category management
 
-### 学术写作
-- 方法论部分的结构化记录
-- 实验结果的系统化管理
-- 决策过程的完整追溯
+**Usage Examples**:
+```
+"Record today's work in research-memory"
+"Log the results of that experiment I just ran"
+"Help me summarize this session and update TODOs"
+"Mark data processing tasks as completed, add new modeling tasks"
+```
 
-## 示例工作流
+### 3. Historical Record Query (`research_memory_query_history`)
+Efficient retrieval of historical information:
+- Keyword search (supports Chinese and English)
+- Filter by research phase
+- Cross-file comprehensive search
+- **Advanced filtering options** (date range, content type, result count limit)
 
-### 每日开始研究
-1. **触发**: "帮我恢复一下项目状态"
-2. **获得**: 最近进展 + 当前 TODO + 工作建议
-3. **开始**: 基于建议开始当天的工作
+**Usage Examples**:
+```
+"Why did we abandon the spatial lag model before?"
+"What experiments are related to H2?"
+"Discussion records about variable construction"
+"Query all modeling records from the past week"
+"Find entries about digital skills in experiment records"
+```
 
-### 阶段性完成
-1. **触发**: "记录这次实验结果"
-2. **自动**: Claude 提取关键信息并结构化记录
-3. **更新**: 自动更新 TODO 和实验记录
+## Supported Research Phases
 
-### 查询历史
-1. **触发**: "我们为什么选择这个方法？"
-2. **获得**: 决策理由 + 备选方案 + 相关实验
-3. **继续**: 基于历史信息继续当前工作
+- **DGP**: Data generating process documentation and hypotheses
+- **data_preprocess**: Data cleaning, variable construction, missing value handling
+- **data_analyse**: Descriptive statistics, visualization, correlation analysis
+- **modeling**: Model specification, estimation methods, hyperparameter tuning
+- **robustness**: Robustness checks, alternative specifications, validation tests
+- **writing**: Documentation, paper writing, figure preparation
+- **infra**: Environment configuration, code organization, tool changes
+- **notes**: General observations, intuitive ideas, future ideas
 
-## 开发状态
+## 📁 Project Structure
 
-- ✅ 核心 SKILL.md 定义
-- ✅ Python handlers.py 实现
-- ✅ 配置系统
-- ✅ 示例记忆文件
-- ✅ 基础功能测试
-- 📚 文档完善
-- 📚 更多使用示例
-- 📚 高级搜索功能
+Directory structure after integration into your project:
 
-## 贡献指南
+```
+your-research-project/
+├── SKILL.md                          # Research Memory skill definition
+├── handlers.py                       # Core implementation logic
+├── config/
+│   └── config.json                   # Configuration file
+├── .claude/
+│   └── CLAUDE.md                     # Claude Code project description
+├── memory/                           # Research memory storage
+│   ├── project-overview.md           # Long-term project knowledge
+│   ├── devlog.md                     # Time-ordered development log
+│   ├── decisions.md                  # Key decisions and reasons
+│   ├── experiments.csv               # Structured experiment records
+│   └── todos.md                      # TODO item management
+└── ...                              # Your other project files
+```
 
-这个项目遵循标准的学术软件开发实践：
+## 💻 Advanced CLI Usage
 
-1. **代码质量**: 保持清晰的注释和文档
-2. **测试覆盖**: 确保功能的正确性和稳定性
-3. **用户友好**: 提供清晰的使用说明和示例
-4. **向后兼容**: v0 到 v1 的平滑迁移路径
+In addition to using through Claude Code, you can directly access more powerful features via command line:
 
-## 许可证
+```bash
+# Basic query
+python3 handlers.py query --question "digital skills"
 
-MIT License - 自由使用和修改
+# Advanced filtering queries
+python3 handlers.py query --question "modeling" --limit 5
+python3 handlers.py query --question "data" --type experiments
+python3 handlers.py query --question "decision" --from-date 2025-12-01 --to-date 2025-12-03
+python3 handlers.py query --question "analysis" --phase modeling
 
-## 联系方式
+# Complete session recording (supports new TODO format)
+python3 handlers.py log-session --payload-json '{
+  "session_goal": "Complete data modeling analysis",
+  "todos": [
+    {
+      "text": "Data cleaning and preprocessing",
+      "status": "completed",
+      "completion_note": "Completed missing value handling and outlier detection"
+    },
+    {
+      "text": "Build linear regression model",
+      "status": "pending",
+      "priority": "high",
+      "category": "modeling"
+    }
+  ],
+  "phases": {
+    "data_preprocess": "Use winsorize for outlier handling",
+    "modeling": "Estimate basic regression model",
+    "notes": "Found model R²=0.72, heteroskedasticity issue exists"
+  }
+}'
+```
 
-- 作者: Yufei Sun (Adrian) <syfyufei@gmail.com>
-- 项目地址: https://github.com/syfyufei/research-memory
+### CLI Filtering Options Description
+
+- `--question`: Search query keywords (required)
+- `--limit`: Limit result count
+- `--type`: Filter by content type (devlog/decisions/experiments)
+- `--from-date`: Start date (YYYY-MM-DD format)
+- `--to-date`: End date (YYYY-MM-DD format)
+- `--phase`: Filter by research phase (DGP/data_preprocess/modeling, etc.)
+
+## 🚀 New Feature Highlights (v0.2)
+
+### ✅ Complete Configuration
+- **All config fields functional**: `memory_directory`, `encoding`, `csv_delimiter`, etc.
+- **Deep configuration merge**: Support user custom override of default configurations
+- **Multi-encoding support**: Perfect support for Chinese encoding (UTF-8, GBK, etc.)
+
+### ✅ Smart TODO Management
+- **Unified status tracking**: pending/completed/cancelled three states
+- **Priority management**: high/medium/low priority marking
+- **Category system**: Support custom categories (analysis/modeling/writing, etc.)
+- **Auto-completion marking**: Intelligently identify and mark completed TODOs
+
+### ✅ Advanced Search Filtering
+- **Multi-dimensional filtering**: Filter by date range, content type, research phase
+- **Result count control**: Flexibly limit search result count
+- **CLI enhancement**: Complete command-line filtering options
+
+### ✅ Data Integrity Guarantee
+- **Experiment ID collision prevention**: Millisecond timestamp + UUID suffix
+- **File format fixes**: Perfect handling of separators and newlines
+- **Incremental updates**: Intelligently protect existing content, avoid duplication
+
+## Technical Features
+
+### v0 Core Features
+- **Local file storage**: No database needed, uses Markdown + CSV
+- **Incremental updates**: Protect existing content, avoid duplicate recording
+- **Multilingual support**: Full support for Chinese-English mixed recording
+- **Academic orientation**: Optimized for academic research workflow
+
+### v1 Planned Extensions
+- **Database backend**: Upgradable to SQLite/PostgreSQL
+- **Vector search**: Support semantic search
+- **MCP integration**: Support remote memory access
+- **Collaboration features**: Multi-user memory sharing
+
+## 🎯 Use Cases
+
+### Individual Researchers
+- Quick context restoration after long project interruptions
+- Avoid repetitive work and decision forgetting
+- Systematic recording of experiments and results
+
+### Research Teams
+- Knowledge transfer and decision tracing
+- Avoid repetitive errors
+- Maintain team research memory
+
+### Academic Writing
+- Structured recording of methodology sections
+- Systematic management of experimental results
+- Complete tracing of decision-making processes
+
+## 🔄 Recommended Workflow
+
+### Daily Research Start
+```
+User: "Good morning! Help me use research-memory to restore project status and give me a plan for today."
+Claude: [Auto-call bootstrap → Provide recent progress + TODOs + work suggestions]
+```
+
+### Research Process Recording
+```
+User: "These experimental results are good, help me record them."
+Claude: [Auto-extract information → Structured recording → Update experiments and TODOs]
+```
+
+### Historical Decision Query
+```
+User: "Why did we choose linear model instead of nonlinear model before?"
+Claude: [Auto-search → Provide decision reasoning + alternatives + related experiment records]
+```
+
+### Progress Summary
+```
+User: "Help me use research-memory to summarize today's work and update TODOs."
+Claude: [Auto-summarize → Mark completed items → Add new TODOs]
+```
+
+## 🏆 Development Status
+
+### ✅ v0.2 Completed Features
+- **Complete configuration**: All config fields functional, multi-encoding support
+- **Smart TODO management**: Unified status tracking, priority and category management
+- **Advanced search filtering**: Multi-dimensional filtering, CLI enhanced options
+- **Data integrity guarantee**: Experiment ID collision prevention, file format fixes
+- **Backward compatibility**: Maintains compatibility with old format payloads
+
+### 📋 Roadmap
+- **v0.3**: [Planning] Experiment validation and schema enforcement
+- **v0.4**: [Planning] Performance optimization and large file support
+- **v1.0**: [Long-term goal] Database backend + vector search
+
+## 🤝 Contributing Guidelines
+
+Contributions welcome! This project follows standard academic software development practices:
+
+1. **Code Quality**: Maintain clear comments and documentation
+2. **Test Coverage**: Ensure functionality correctness and stability
+3. **User Friendly**: Provide clear usage instructions and examples
+4. **Backward Compatibility**: Smooth migration path from v0 to v1
+
+### Contribution Process
+1. Fork the project
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Create Pull Request
+
+## 📄 License
+
+MIT License - Free to use and modify
+
+## 📞 Contact
+
+- **Author**: Yufei Sun (Adrian) <syfyufei@gmail.com>
+- **Project URL**: https://github.com/syfyufei/research-memory
+- **Issue Reporting**: [GitHub Issues](https://github.com/syfyufei/research-memory/issues)
+
+## 🙏 Acknowledgments
+
+Thanks to all developers and researchers who contribute to the development of academic research tools. This skill aims to help researchers better manage research memory and improve the efficiency and quality of academic research.
 
 ---
 
-这个 Skill 旨在帮助研究人员更好地管理和利用研究过程中的知识积累，提高学术研究的效率和质量。
+**Let research memory no longer be lost, let knowledge accumulation be more valuable!** 🧠✨
+
+---
+
+This skill aims to help researchers better manage and utilize knowledge accumulation during the research process, improving the efficiency and quality of academic research.
