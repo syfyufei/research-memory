@@ -1,8 +1,8 @@
 ---
-description: Log current work session to research memory
+description: Remember current work session
 ---
 
-Use the research-memory skill to log the current work session.
+Use the research-memory skill to remember the current work session.
 
 Analyze the conversation history and extract:
 - Session goal and main objective

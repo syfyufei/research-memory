@@ -128,7 +128,7 @@ research-memory/
 ```
 # 应该看到：
 # /research-memory:bootstrap - 恢复项目上下文并生成工作计划
-# /research-memory:log - 记录当前工作会话到 research memory
+# /research-memory:remember - 记录当前工作会话到 research memory
 # /research-memory:query - 查询 research memory 历史记录
 ```
 
@@ -140,7 +140,7 @@ Research Memory 可以通过两种方式使用：
 
 ```bash
 /research-memory:bootstrap    # 恢复项目上下文
-/research-memory:log          # 记录当前会话
+/research-memory:remember          # 记录当前会话
 /research-memory:query        # 搜索历史记录
 ```
 

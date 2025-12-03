@@ -127,7 +127,7 @@ Claude Codeで、まずマーケットプレイスを登録します：
 ```
 # 以下が表示されるはず：
 # /research-memory:bootstrap - プロジェクトコンテキストを復元して作業計画を生成
-# /research-memory:log - 現在の作業セッションをresearch memoryに記録
+# /research-memory:remember - 現在の作業セッションをresearch memoryに記録
 # /research-memory:query - research memoryの履歴を検索
 ```
 
@@ -139,7 +139,7 @@ Research Memoryは2つの方法で使用できます：
 
 ```bash
 /research-memory:bootstrap    # プロジェクトコンテキストを復元
-/research-memory:log          # 現在のセッションを記録
+/research-memory:remember          # 現在のセッションを記録
 /research-memory:query        # 履歴を検索
 ```
 
